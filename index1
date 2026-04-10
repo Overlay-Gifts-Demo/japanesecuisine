@@ -21,6 +21,7 @@
   --ff-jp:  'Noto Serif JP', serif;
   --ff-en:  'Cormorant Garamond', serif;
   --ff-ui:  'DM Sans', sans-serif;
+  --vh: 1vh;
 }
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 html { height:100%; overflow:hidden; }
@@ -84,6 +85,8 @@ body::before {
 /* ── REEL CONTAINER ── */
 #reelWrap {
   position:fixed; inset:0; overflow:hidden;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
 }
 #reelTrack {
   height:100%;
@@ -105,6 +108,7 @@ body::before {
              radial-gradient(ellipse 60% 50% at 80% 70%, rgba(184,151,58,0.1) 0%, transparent 50%),
              var(--ink2);
 }
+/* Seigaiha wave top right */
 .reel-bg::after {
   content:''; position:absolute; top:0; right:0; width:180px; height:180px; opacity:0.04;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40'%3E%3Cpath d='M0 40 Q20 20 40 40 Q60 20 80 40' stroke='%23F0E8D5' stroke-width='1' fill='none'/%3E%3Cpath d='M0 20 Q20 0 40 20 Q60 0 80 20' stroke='%23F0E8D5' stroke-width='1' fill='none'/%3E%3C/svg%3E");
@@ -165,45 +169,6 @@ model-viewer {
   width:100%; height:100%;
   background:transparent; --poster-color:transparent;
 }
-
-/* ── SLIDER CONTROLS ── */
-.viewer-sliders {
-  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
-  z-index:15; width:calc(100% - 60px); max-width:280px;
-  display:flex; flex-direction:column; gap:10px;
-  background:rgba(8,6,4,0.5); backdrop-filter:blur(12px);
-  border:1px solid rgba(240,232,213,0.07); border-radius:8px;
-  padding:12px 14px;
-}
-.slider-row {
-  display:flex; align-items:center; gap:10px;
-}
-.slider-label {
-  font-size:8px; letter-spacing:0.18em; text-transform:uppercase;
-  color:rgba(240,232,213,0.35); font-family:var(--ff-ui);
-  min-width:28px; flex-shrink:0;
-}
-.slider-label svg { display:block; }
-.dish-slider {
-  -webkit-appearance:none; appearance:none;
-  flex:1; height:3px; border-radius:2px; outline:none; cursor:pointer;
-  background:rgba(240,232,213,0.1);
-}
-.dish-slider::-webkit-slider-thumb {
-  -webkit-appearance:none; appearance:none;
-  width:14px; height:14px; border-radius:50%;
-  background:var(--beni2); border:2px solid rgba(240,232,213,0.2);
-  cursor:pointer; transition:transform 0.15s;
-}
-.dish-slider::-webkit-slider-thumb:active { transform:scale(1.3); }
-.dish-slider::-moz-range-thumb {
-  width:14px; height:14px; border-radius:50%;
-  background:var(--beni2); border:2px solid rgba(240,232,213,0.2);
-  cursor:pointer;
-}
-/* Gradient track fill using JS-updated custom property */
-.dish-slider { background: linear-gradient(to right, var(--beni2) 0%, var(--beni2) var(--val, 50%), rgba(240,232,213,0.1) var(--val, 50%), rgba(240,232,213,0.1) 100%); }
-
 .viewer-no-model {
   position:absolute; inset:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:12px;
@@ -231,6 +196,13 @@ model-viewer {
 .vb-dot { width:5px; height:5px; border-radius:50%; background:var(--beni2); animation:blinkDot 2s ease infinite; }
 @keyframes blinkDot { 0%,100%{opacity:1} 50%{opacity:0.2} }
 .vb-txt { font-size:8px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(240,232,213,0.45); font-family:var(--ff-ui); }
+
+.viewer-hint-bottom {
+  position:absolute; bottom:12px; left:50%; transform:translateX(-50%);
+  font-size:9px; letter-spacing:0.18em; text-transform:uppercase;
+  color:rgba(240,232,213,0.22); white-space:nowrap; z-index:10; pointer-events:none;
+  font-family:var(--ff-ui);
+}
 
 /* ── SUMI DIVIDER ── */
 .sumi-line {
@@ -293,57 +265,105 @@ model-viewer {
   background:rgba(8,6,4,0.95);
 }
 
-/* ADD TO CART Button — full width accent (replaces AR button) */
-.btn-add-cart {
+/* AR Button — full width accent */
+.btn-ar {
   flex:1; position:relative; overflow:hidden;
   background:linear-gradient(135deg, var(--beni3) 0%, var(--beni) 100%);
   border:none; border-radius:4px; padding:16px 12px;
   font-family:var(--ff-ui); font-size:12px; font-weight:500;
   letter-spacing:0.08em; text-transform:uppercase;
   color:var(--paper); cursor:pointer;
-  display:flex; align-items:center; justify-content:center; gap:10px;
+  display:flex; align-items:center; justify-content:center; gap:8px;
   box-shadow:0 4px 28px rgba(122,46,30,0.45);
   transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
 }
-.btn-add-cart::before {
+.btn-ar::before {
   content:''; position:absolute; top:0; left:-100%; width:60%; height:100%;
   background:linear-gradient(90deg,transparent,rgba(240,232,213,0.2),transparent);
   animation:shimmer 2.4s ease-in-out infinite;
 }
 @keyframes shimmer { 0%{left:-100%} 60%,100%{left:140%} }
-.btn-add-cart:active { transform:scale(0.97); }
-.btn-add-cart.added-pulse {
-  background:linear-gradient(135deg, #2a6e30 0%, #1d5023 100%);
-  box-shadow:0 4px 28px rgba(40,110,48,0.5);
+.btn-ar:active { transform:scale(0.97); }
+.btn-ar .ar-icon {
+  width:22px; height:22px; flex-shrink:0;
 }
-.btn-add-cart-icon { font-size:20px; line-height:1; }
-.btn-add-cart-text { display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
-.btn-add-cart-main { font-size:12px; font-weight:500; }
-.btn-add-cart-sub  { font-size:8px; color:rgba(240,232,213,0.6); font-weight:300; letter-spacing:0.1em; }
+.btn-ar-text { display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
+.btn-ar-main { font-size:12px; font-weight:500; }
+.btn-ar-sub  { font-size:8px; color:rgba(240,232,213,0.6); font-weight:300; letter-spacing:0.1em; }
 
-/* Qty counter on cart button */
-.btn-cart-counter {
-  position:absolute; top:-1px; right:-1px;
-  width:18px; height:18px; border-radius:50%;
-  background:var(--yama); border:2px solid var(--ink);
-  font-size:9px; font-weight:700; color:var(--ink);
-  display:none; align-items:center; justify-content:center; font-family:var(--ff-ui);
-}
-.btn-cart-counter.show { display:flex; }
-
-/* AR floating button — now just an icon button */
-.btn-ar-float {
+/* Add to Cart Button */
+.btn-cart {
   width:54px; flex-shrink:0;
   background:rgba(240,232,213,0.06); border:1px solid rgba(240,232,213,0.12);
   border-radius:4px; cursor:pointer;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
   transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  position:relative;
+  position:relative; overflow:hidden;
 }
-.btn-ar-float:active { transform:scale(0.9); background:rgba(122,46,30,0.25); }
-.btn-ar-float-icon { font-size:20px; line-height:1; }
-.btn-ar-float-txt  { font-size:7px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(240,232,213,0.4); font-family:var(--ff-ui); }
-.btn-ar-float.no-model { opacity:0.35; cursor:default; }
+.btn-cart:active { transform:scale(0.9); background:rgba(122,46,30,0.2); }
+.btn-cart.added  { background:rgba(40,90,45,0.2); border-color:rgba(40,90,45,0.3); }
+.btn-cart-icon { font-size:20px; line-height:1; }
+.btn-cart-txt  { font-size:7px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(240,232,213,0.4); font-family:var(--ff-ui); }
+
+/* Qty badge on cart btn */
+.btn-cart-qty {
+  position:absolute; top:-1px; right:-1px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--beni2); border:1.5px solid var(--ink);
+  font-size:8px; font-weight:600; color:var(--paper);
+  display:none; align-items:center; justify-content:center; font-family:var(--ff-ui);
+}
+.btn-cart-qty.show { display:flex; }
+
+/* ── NAV BAR ── */
+.app-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  display:none;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
+  background:rgba(8,6,4,0.96);
+  border-top:1px solid rgba(122,46,30,0.15);
+  backdrop-filter:blur(20px);
+  justify-content:space-around; align-items:center;
+}
+.app-nav.show { display:flex; }
+/* Beni-gold gradient line on nav top */
+.app-nav::before {
+  content:''; position:absolute; top:-1px; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(122,46,30,0.5) 30%,rgba(184,151,58,0.4) 50%,rgba(122,46,30,0.5) 70%,transparent);
+}
+.nav-btn {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:6px 4px; border:none; background:none; cursor:pointer;
+  transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.nav-btn:active { transform:scale(0.88); }
+.nav-btn-icon {
+  font-size:20px; line-height:1;
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.nav-btn.active .nav-btn-icon { transform:translateY(-3px) scale(1.15); }
+.nav-btn-label {
+  font-size:8px; letter-spacing:0.14em; text-transform:uppercase;
+  color:rgba(240,232,213,0.22); font-family:var(--ff-ui); transition:color 0.25s;
+}
+.nav-btn.active .nav-btn-label { color:var(--beni2); }
+/* Center 3D nav bubble */
+.nav-3d-btn {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:6px 4px; border:none; background:none; cursor:pointer;
+}
+.nav-3d-bubble {
+  width:50px; height:50px; border-radius:50%; margin-top:-22px; margin-bottom:2px;
+  background:linear-gradient(135deg,var(--beni3),var(--beni));
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  box-shadow:0 0 0 3px rgba(122,46,30,0.15), 0 8px 24px rgba(122,46,30,0.5);
+  animation:navPulse 3s ease-in-out infinite;
+}
+@keyframes navPulse {
+  0%,100%{box-shadow:0 0 0 3px rgba(122,46,30,0.15),0 8px 24px rgba(122,46,30,0.5)}
+  50%{box-shadow:0 0 0 6px rgba(122,46,30,0.25),0 8px 32px rgba(122,46,30,0.7)}
+}
+.nav-3d-label { font-size:8px; letter-spacing:0.14em; text-transform:uppercase; color:var(--beni2); font-family:var(--ff-ui); }
 
 /* ── ORDER SCREEN ── */
 #screenOrder {
@@ -362,9 +382,9 @@ model-viewer {
 .order-header-jp { font-family:var(--ff-jp); font-size:10px; font-weight:200; color:rgba(240,232,213,0.3); letter-spacing:0.2em; }
 .order-close {
   width:36px; height:36px; border-radius:50%;
-  background:rgba(240,232,213,0.06); border:none;
+  background:rgba(240,232,213,0.06); border:1px solid rgba(240,232,213,0.1);
   display:flex; align-items:center; justify-content:center;
-  font-size:18px; cursor:pointer;
+  font-size:18px; cursor:pointer; border:none;
   color:rgba(240,232,213,0.6);
 }
 .order-body { flex:1; overflow-y:auto; padding:16px 22px; }
@@ -484,7 +504,7 @@ model-viewer {
 @keyframes spin { to{transform:rotate(360deg)} }
 .loader-txt { font-size:8px; letter-spacing:0.24em; text-transform:uppercase; color:rgba(240,232,213,0.24); font-family:var(--ff-ui); }
 
-/* ── GLOBAL LOADER ── */
+/* ── SHEET LOADER ── */
 .global-loader {
   position:fixed; inset:0; z-index:8000;
   background:var(--ink); display:flex; align-items:center; justify-content:center;
@@ -495,6 +515,7 @@ model-viewer {
 .gl-ring { width:28px; height:28px; border:1.5px solid rgba(122,46,30,0.15); border-top-color:var(--beni2); border-radius:50%; animation:spin 0.7s linear infinite; }
 .gl-txt  { font-size:9px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(240,232,213,0.22); font-family:var(--ff-ui); }
 
+/* ── SCROLL HINT only first card ── */
 .reel-card:first-child .swipe-indicator { display:flex; }
 .reel-card:not(:first-child) .swipe-indicator { display:none; }
 </style>
@@ -532,7 +553,7 @@ model-viewer {
 
 <!-- REEL WRAP -->
 <div id="reelWrap" style="display:none;">
-  <!-- HUD fixed on top -->
+  <!-- HUD fixed on top of reels -->
   <div class="reel-hud" style="position:fixed;top:0;left:0;right:0;z-index:50;padding:calc(14px + env(safe-area-inset-top)) 20px 14px;background:linear-gradient(to bottom,rgba(8,6,4,0.8) 0%,transparent 100%);display:flex;align-items:center;justify-content:space-between;">
     <div class="hud-brand">
       Sakura
@@ -659,23 +680,25 @@ function buildReels() {
   dots.innerHTML  = '';
 
   menuItems.forEach((item, idx) => {
-    /* DOT */
+    /* ── DOT ── */
     const dot = document.createElement('div');
     dot.className = 'reel-dot' + (idx===0?' active':'');
     dot.style.height = idx===0 ? '22px' : '6px';
     dot.onclick = () => scrollToCard(idx);
     dots.appendChild(dot);
 
-    /* CARD */
+    /* ── CARD ── */
     const card = document.createElement('div');
     card.className = 'reel-card';
     card.id = 'reel_' + idx;
 
+    /* Pills */
     const pills = [];
     if(item.veg)       pills.push('<span class="info-pill pill-veg">野菜 Veg</span>');
     if(item.chef_pick) pills.push('<span class="info-pill pill-chef">★ 料理長</span>');
     if(item.new)       pills.push('<span class="info-pill pill-new">New 新品</span>');
 
+    /* Has 3D model? */
     const has3d = item.glb_url && item.glb_url.trim();
 
     card.innerHTML = `
@@ -693,8 +716,6 @@ function buildReels() {
             shadow-intensity="1.2" shadow-softness="0.7"
             exposure="1.1" environment-image="neutral"
             camera-controls interaction-prompt="none"
-            min-camera-orbit="auto auto 5%"
-            max-camera-orbit="auto auto 200%"
             xr-environment
             style="width:100%;height:100%;background:transparent;--poster-color:transparent;">
           </model-viewer>
@@ -702,35 +723,13 @@ function buildReels() {
             <div class="loader-ring"></div>
             <div class="loader-txt">読込中…</div>
           </div>
-
-          <!-- SLIDER CONTROLS -->
-          <div class="viewer-sliders" id="sliders_${idx}">
-            <div class="slider-row">
-              <div class="slider-label">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M7 1v12M1 7h12" stroke="rgba(240,232,213,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-              </div>
-              <input type="range" class="dish-slider" id="zoom_${idx}" min="0" max="100" value="50"
-                oninput="handleZoom(this, '${idx}')" ontouchstart="stopProp(event)" ontouchmove="stopProp(event)">
-            </div>
-            <div class="slider-row">
-              <div class="slider-label">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 7h10M9 4l3 3-3 3" stroke="rgba(240,232,213,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-              <input type="range" class="dish-slider" id="rotate_${idx}" min="0" max="360" value="0"
-                oninput="handleRotate(this, '${idx}')" ontouchstart="stopProp(event)" ontouchmove="stopProp(event)">
-            </div>
-          </div>
         ` : `
           <div class="viewer-no-model">
             <div class="viewer-no-emoji">${item.emoji}</div>
             <div class="viewer-no-txt">3D Preview Coming Soon</div>
           </div>
         `}
-        <!-- Corners -->
+        <!-- Corner decorations -->
         <div class="viewer-corner tl"></div>
         <div class="viewer-corner tr"></div>
         <div class="viewer-corner bl"></div>
@@ -740,6 +739,9 @@ function buildReels() {
           <div class="vb-dot"></div>
           <div class="vb-txt">${has3d ? '3D · ドラッグで回転' : '料理プレビュー'}</div>
         </div>
+        <!-- Hint -->
+        ${has3d ? `<div class="viewer-hint-bottom" id="hint_${idx}">ドラッグ · ピンチ</div>` : ''}
+        <!-- Swipe hint only first -->
         ${idx===0 ? `
           <div class="swipe-indicator">
             <div class="swipe-arrow">↑</div>
@@ -770,51 +772,50 @@ function buildReels() {
         </div>
       </div>
 
-      <!-- ACTIONS: Add to Cart (full) + AR (icon) -->
+      <!-- ACTIONS -->
       <div class="reel-actions">
-        <button class="btn-add-cart" id="addCartBtn_${idx}" onclick="addToCart('${item.id}', ${idx})">
-          <div class="btn-cart-counter" id="cartCounter_${idx}">0</div>
-          <div class="btn-add-cart-icon">🛒</div>
-          <div class="btn-add-cart-text">
-            <div class="btn-add-cart-main">カートに追加 · Add to Cart</div>
-            <div class="btn-add-cart-sub">₹ ${item.price.toLocaleString('en-IN')} per item</div>
-          </div>
-        </button>
         ${has3d ? `
-          <button class="btn-ar-float" onclick="triggerAR('${idx}')" title="View in AR">
-            <div class="btn-ar-float-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+          <button class="btn-ar" onclick="triggerAR('${idx}')">
+            <svg class="ar-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="btn-ar-text">
+              <div class="btn-ar-main">卓上に置く · Try on Table</div>
+              <div class="btn-ar-sub">Augmented Reality</div>
             </div>
-            <div class="btn-ar-float-txt">AR</div>
           </button>
         ` : `
-          <button class="btn-ar-float no-model" disabled title="3D Coming Soon">
-            <div class="btn-ar-float-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.4"/>
-                <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
-                <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
-              </svg>
+          <button class="btn-ar" style="opacity:0.4;animation:none;cursor:default;">
+            <svg class="ar-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <div class="btn-ar-text">
+              <div class="btn-ar-main">3D Coming Soon</div>
+              <div class="btn-ar-sub">モデル準備中</div>
             </div>
-            <div class="btn-ar-float-txt">AR</div>
           </button>
         `}
+        <button class="btn-cart" id="cartBtn_${idx}" onclick="addToCart('${item.id}',${idx})">
+          <div class="btn-cart-qty" id="cartQty_${idx}">0</div>
+          <div class="btn-cart-icon">+</div>
+          <div class="btn-cart-txt">Add</div>
+        </button>
       </div>
     `;
     track.appendChild(card);
 
-    /* Model loader */
+    /* Model loader hide on load */
     if(has3d) {
       const mv = card.querySelector(`#mv_${idx}`);
       const ld = card.querySelector(`#loader_${idx}`);
       if(mv && ld) {
         ld.style.display = 'flex';
-        mv.addEventListener('load', () => { ld.style.display='none'; }, {once:true});
-        setTimeout(() => { if(ld) ld.style.display='none'; }, 15000);
+        mv.addEventListener('load', ()=>{ ld.style.display='none'; }, {once:true});
+        setTimeout(()=>{ if(ld) ld.style.display='none'; }, 15000);
       }
     }
   });
@@ -822,48 +823,24 @@ function buildReels() {
   setupTouch();
   updateDots(0);
   document.getElementById('globalLoader').classList.add('hide');
-  setTimeout(() => { document.getElementById('globalLoader').style.display='none'; }, 700);
+  setTimeout(()=>{ document.getElementById('globalLoader').style.display='none'; },700);
   document.getElementById('reelWrap').style.display = 'block';
 }
 
-/* ─── SLIDER CONTROLS ─── */
-function stopProp(e) {
-  e.stopPropagation();
-}
-
-function handleZoom(slider, idx) {
-  const mv = document.getElementById('mv_' + idx);
-  if(!mv) return;
-  const val = parseInt(slider.value);
-  // Map 0-100 to orbit radius: 100% (far) to 20% (close)
-  const radius = 100 - (val * 0.8); // 100% at 0, 20% at 100
-  const currentOrbit = mv.getCameraOrbit();
-  mv.cameraOrbit = `${currentOrbit.theta}rad ${currentOrbit.phi}rad ${radius}%`;
-  // Update slider track color
-  slider.style.setProperty('--val', val + '%');
-}
-
-function handleRotate(slider, idx) {
-  const mv = document.getElementById('mv_' + idx);
-  if(!mv) return;
-  const deg = parseInt(slider.value);
-  const rad = (deg * Math.PI) / 180;
-  const currentOrbit = mv.getCameraOrbit();
-  mv.cameraOrbit = `${rad}rad ${currentOrbit.phi}rad ${currentOrbit.radius}`;
-  slider.style.setProperty('--val', (deg / 360 * 100) + '%');
-}
-
 /* ─── TOUCH / SCROLL NAVIGATION ─── */
-let startY = 0, startX = 0, isDragging = false;
+let startY = 0, isDragging = false, trackY = 0;
 
-function getCardH() { return window.innerHeight; }
+function getCardH() {
+  return window.innerHeight;
+}
 
 function scrollToCard(idx) {
   const total = menuItems.length;
   idx = Math.max(0, Math.min(total-1, idx));
   currentIdx = idx;
   const track = document.getElementById('reelTrack');
-  track.style.transform = `translateY(${-idx * getCardH()}px)`;
+  trackY = -idx * getCardH();
+  track.style.transform = `translateY(${trackY}px)`;
   updateDots(idx);
 }
 
@@ -876,12 +853,8 @@ function updateDots(idx) {
 
 function setupTouch() {
   const wrap = document.getElementById('reelWrap');
-
   wrap.addEventListener('touchstart', e => {
-    // Don't hijack slider touches
-    if(e.target.classList.contains('dish-slider')) return;
     startY = e.touches[0].clientY;
-    startX = e.touches[0].clientX;
     isDragging = true;
   }, {passive:true});
 
@@ -889,13 +862,12 @@ function setupTouch() {
     if(!isDragging) return;
     isDragging = false;
     const dy = startY - e.changedTouches[0].clientY;
-    const dx = Math.abs(startX - e.changedTouches[0].clientX);
-    // Only swipe vertically if mostly vertical gesture
-    if(Math.abs(dy) > 50 && Math.abs(dy) > dx * 1.5) {
+    if(Math.abs(dy) > 50) {
       scrollToCard(currentIdx + (dy > 0 ? 1 : -1));
     }
   }, {passive:true});
 
+  /* Keyboard */
   document.addEventListener('keydown', e => {
     if(e.key==='ArrowDown') scrollToCard(currentIdx+1);
     if(e.key==='ArrowUp')   scrollToCard(currentIdx-1);
@@ -904,31 +876,29 @@ function setupTouch() {
 
 /* ─── AR TRIGGER ─── */
 function triggerAR(idx) {
-  const mv = document.getElementById('mv_' + idx);
-  if(mv) mv.activateAR();
+  const mv = document.getElementById('mv_'+idx);
+  if(mv) {
+    mv.activateAR();
+  }
 }
 
 /* ─── CART ─── */
 function addToCart(id, cardIdx) {
   const item = menuItems.find(i=>i.id===id);
-  if(!item || !item.available) return;
+  if(!item||!item.available) return;
   cart[id] = (cart[id]||0) + 1;
   updateCartUI();
-
-  // Animate button
-  const btn = document.getElementById('addCartBtn_' + cardIdx);
+  /* Animate button */
+  const btn = document.getElementById('cartBtn_'+cardIdx);
   if(btn) {
-    btn.classList.add('added-pulse');
-    setTimeout(() => btn.classList.remove('added-pulse'), 700);
+    btn.classList.add('added');
+    setTimeout(()=>btn.classList.remove('added'), 600);
   }
-
-  // Show counter on button
-  const counter = document.getElementById('cartCounter_' + cardIdx);
-  if(counter) {
-    counter.textContent = cart[id];
-    counter.classList.add('show');
+  const qty = document.getElementById('cartQty_'+cardIdx);
+  if(qty) {
+    qty.textContent = cart[id];
+    qty.classList.add('show');
   }
-
   showToast(item.emoji + ' ' + item.name + ' added');
 }
 
@@ -995,11 +965,11 @@ function addToCartDirect(id) {
 
 function syncCardQtyBadges() {
   menuItems.forEach((item,idx) => {
-    const counter = document.getElementById('cartCounter_'+idx);
-    if(!counter) return;
+    const qty = document.getElementById('cartQty_'+idx);
+    if(!qty) return;
     const q = cart[item.id]||0;
-    counter.textContent = q;
-    counter.classList.toggle('show', q>0);
+    qty.textContent = q;
+    qty.classList.toggle('show', q>0);
   });
 }
 
@@ -1026,6 +996,7 @@ function placeOrder() {
   });
   const msg = `🍽️ *NEW ORDER — KOT*\n━━━━━━━━━━━━━━━━━━━━\n*Table  :* ${TABLE_NUMBER}\n*Seat   :* ${TABLE_INFO}\n*Order  :* ${orderId}\n*Time   :* ${time}, ${date}\n━━━━━━━━━━━━━━━━━━━━\n${lines}━━━━━━━━━━━━━━━━━━━━\n*TOTAL  :* ₹${total.toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━${note?'\n📝 *Note:* '+note:''}\n_Sent via Sakura AR Menu · さくら_`;
 
+  /* KOT preview */
   let preview = '';
   snap.forEach(({item,qty}) => { preview += item.name+' × '+qty+'  ₹'+(item.price*qty).toLocaleString('en-IN')+'\n'; });
   preview += '\n合計: ₹'+total.toLocaleString('en-IN');
@@ -1034,8 +1005,10 @@ function placeOrder() {
 
   closeOrder();
   document.getElementById('successOverlay').classList.add('show');
+
   setTimeout(()=>window.open('https://wa.me/'+KITCHEN_WA+'?text='+encodeURIComponent(msg),'_blank'),500);
 
+  /* Clear cart */
   Object.keys(cart).forEach(k=>delete cart[k]);
   document.getElementById('specialNote').value='';
   updateCartUI();
@@ -1054,7 +1027,7 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'), 2600);
 }
 
-/* ─── INIT ─── */
+/* ─── SPLASH → APP ─── */
 async function init() {
   await fetchMenu();
   setTimeout(() => {
