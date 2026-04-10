@@ -31,6 +31,7 @@ body {
   touch-action:none;
 }
 
+/* ── GRAIN OVERLAY ── */
 body::before {
   content:''; position:fixed; inset:0; z-index:9998; pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
@@ -53,7 +54,7 @@ body::before {
   animation:monGlow 3s ease-in-out infinite;
 }
 @keyframes monGlow {
-  0%,100%{box-shadow:0 0 0 0 rgba(122,46,30,0)}
+  0%,100%{box-shadow:0 0 0 0 rgba(122,46,30,0)} 
   50%{box-shadow:0 0 40px 8px rgba(122,46,30,0.15)}
 }
 .splash-mon::before {
@@ -81,7 +82,9 @@ body::before {
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── REEL CONTAINER ── */
-#reelWrap { position:fixed; inset:0; overflow:hidden; }
+#reelWrap {
+  position:fixed; inset:0; overflow:hidden;
+}
 #reelTrack {
   height:100%;
   transition:transform 0.55s cubic-bezier(0.77,0,0.175,1);
@@ -95,6 +98,7 @@ body::before {
   display:flex; flex-direction:column;
 }
 
+/* Ambient BG glow per card */
 .reel-bg {
   position:absolute; inset:0; z-index:0;
   background:radial-gradient(ellipse 80% 60% at 20% 30%, rgba(122,46,30,0.22) 0%, transparent 60%),
@@ -139,95 +143,17 @@ body::before {
 }
 .hud-cart-count.show { display:flex; }
 
-/* ── SIDE NAV SLIDER ── */
-#sideSliderWrap {
-  position:fixed;
-  right:0;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:100;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  padding:14px 8px;
-  background:rgba(8,6,4,0.55);
-  backdrop-filter:blur(12px);
-  border-radius:20px 0 0 20px;
-  border:1px solid rgba(240,232,213,0.07);
-  border-right:none;
-  touch-action:none;
-  user-select:none;
+/* ── PROGRESS DOTS ── */
+.reel-dots {
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  z-index:20; display:flex; flex-direction:column; gap:5px;
 }
-
-/* Vertical slider track wrapper — rotated */
-.side-slider-track-wrap {
-  position:relative;
-  width:4px;
-  height:160px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-#sideSlider {
-  -webkit-appearance:none;
-  appearance:none;
-  writing-mode:vertical-lr;
-  direction:rtl;
-  width:160px;
-  height:4px;
-  background:rgba(240,232,213,0.08);
-  border-radius:2px;
-  outline:none;
+.reel-dot {
+  width:3px; border-radius:2px; background:rgba(240,232,213,0.2);
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
   cursor:pointer;
-  transform:rotate(180deg);
-  position:absolute;
-  /* track fill updated via JS */
 }
-#sideSlider::-webkit-slider-thumb {
-  -webkit-appearance:none;
-  appearance:none;
-  width:18px;
-  height:18px;
-  border-radius:50%;
-  background:var(--beni2);
-  border:2px solid rgba(240,232,213,0.25);
-  cursor:grab;
-  box-shadow:0 0 10px rgba(160,61,40,0.5);
-  transition:transform 0.15s;
-}
-#sideSlider::-webkit-slider-thumb:active { cursor:grabbing; transform:scale(1.25); }
-#sideSlider::-moz-range-thumb {
-  width:18px; height:18px; border-radius:50%;
-  background:var(--beni2); border:2px solid rgba(240,232,213,0.25);
-  cursor:grab;
-}
-
-.side-slider-label-top,
-.side-slider-label-bot {
-  font-size:8px;
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-  color:rgba(240,232,213,0.25);
-  font-family:var(--ff-ui);
-  writing-mode:horizontal-tb;
-}
-
-.side-slider-idx {
-  font-family:var(--ff-en);
-  font-size:13px;
-  font-weight:400;
-  color:var(--yama2);
-  letter-spacing:0.06em;
-  margin-top:2px;
-}
-.side-slider-total {
-  font-size:8px;
-  color:rgba(240,232,213,0.2);
-  font-family:var(--ff-ui);
-  letter-spacing:0.1em;
-}
+.reel-dot.active { background:var(--beni2); height:22px !important; }
 
 /* ── 3D VIEWER AREA ── */
 .reel-viewer {
@@ -240,6 +166,44 @@ model-viewer {
   background:transparent; --poster-color:transparent;
 }
 
+/* ── SLIDER CONTROLS ── */
+.viewer-sliders {
+  position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+  z-index:15; width:calc(100% - 60px); max-width:280px;
+  display:flex; flex-direction:column; gap:10px;
+  background:rgba(8,6,4,0.5); backdrop-filter:blur(12px);
+  border:1px solid rgba(240,232,213,0.07); border-radius:8px;
+  padding:12px 14px;
+}
+.slider-row {
+  display:flex; align-items:center; gap:10px;
+}
+.slider-label {
+  font-size:8px; letter-spacing:0.18em; text-transform:uppercase;
+  color:rgba(240,232,213,0.35); font-family:var(--ff-ui);
+  min-width:28px; flex-shrink:0;
+}
+.slider-label svg { display:block; }
+.dish-slider {
+  -webkit-appearance:none; appearance:none;
+  flex:1; height:3px; border-radius:2px; outline:none; cursor:pointer;
+  background:rgba(240,232,213,0.1);
+}
+.dish-slider::-webkit-slider-thumb {
+  -webkit-appearance:none; appearance:none;
+  width:14px; height:14px; border-radius:50%;
+  background:var(--beni2); border:2px solid rgba(240,232,213,0.2);
+  cursor:pointer; transition:transform 0.15s;
+}
+.dish-slider::-webkit-slider-thumb:active { transform:scale(1.3); }
+.dish-slider::-moz-range-thumb {
+  width:14px; height:14px; border-radius:50%;
+  background:var(--beni2); border:2px solid rgba(240,232,213,0.2);
+  cursor:pointer;
+}
+/* Gradient track fill using JS-updated custom property */
+.dish-slider { background: linear-gradient(to right, var(--beni2) 0%, var(--beni2) var(--val, 50%), rgba(240,232,213,0.1) var(--val, 50%), rgba(240,232,213,0.1) 100%); }
+
 .viewer-no-model {
   position:absolute; inset:0; display:flex; flex-direction:column;
   align-items:center; justify-content:center; gap:12px;
@@ -248,6 +212,7 @@ model-viewer {
 @keyframes floatEmoji { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-10px) rotate(3deg)} }
 .viewer-no-txt { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(240,232,213,0.2); }
 
+/* Viewer corner decoration */
 .viewer-corner {
   position:absolute; z-index:10; pointer-events:none;
   width:20px; height:20px;
@@ -328,6 +293,7 @@ model-viewer {
   background:rgba(8,6,4,0.95);
 }
 
+/* ADD TO CART Button — full width accent (replaces AR button) */
 .btn-add-cart {
   flex:1; position:relative; overflow:hidden;
   background:linear-gradient(135deg, var(--beni3) 0%, var(--beni) 100%);
@@ -355,6 +321,7 @@ model-viewer {
 .btn-add-cart-main { font-size:12px; font-weight:500; }
 .btn-add-cart-sub  { font-size:8px; color:rgba(240,232,213,0.6); font-weight:300; letter-spacing:0.1em; }
 
+/* Qty counter on cart button */
 .btn-cart-counter {
   position:absolute; top:-1px; right:-1px;
   width:18px; height:18px; border-radius:50%;
@@ -364,6 +331,7 @@ model-viewer {
 }
 .btn-cart-counter.show { display:flex; }
 
+/* AR floating button — now just an icon button */
 .btn-ar-float {
   width:54px; flex-shrink:0;
   background:rgba(240,232,213,0.06); border:1px solid rgba(240,232,213,0.12);
@@ -493,7 +461,7 @@ model-viewer {
 
 /* ── SWIPE INDICATOR ── */
 .swipe-indicator {
-  position:absolute; bottom:160px; left:40%; transform:translateX(-50%);
+  position:absolute; bottom:160px; left:50%; transform:translateX(-50%);
   z-index:15; display:flex; flex-direction:column; align-items:center; gap:8px;
   animation:swipeHint 1s ease 4s both, swipeFade 0.5s ease 7s both;
   pointer-events:none;
@@ -579,19 +547,8 @@ model-viewer {
     </div>
   </div>
 
-  <!-- ── SIDE NAV SLIDER ── -->
-  <div id="sideSliderWrap">
-    <div class="side-slider-label-top">1</div>
-    <div class="side-slider-track-wrap">
-      <input type="range" id="sideSlider" min="0" max="9" value="0" step="1"
-        oninput="onSideSliderInput(this)"
-        ontouchstart="stopSlideProp(event)"
-        ontouchmove="stopSlideProp(event)">
-    </div>
-    <div class="side-slider-label-bot" id="sideSliderMax">10</div>
-    <div class="side-slider-idx" id="sideSliderIdx">1</div>
-    <div class="side-slider-total" id="sideSliderTotalLbl">of 10</div>
-  </div>
+  <!-- Progress dots -->
+  <div class="reel-dots" id="reelDots"></div>
 
   <!-- Reel track -->
   <div id="reelTrack"></div>
@@ -697,20 +654,18 @@ async function fetchMenu() {
 /* ─── BUILD REELS ─── */
 function buildReels() {
   const track = document.getElementById('reelTrack');
+  const dots  = document.getElementById('reelDots');
   track.innerHTML = '';
-
-  const total = menuItems.length;
-
-  /* Init side slider */
-  const sl = document.getElementById('sideSlider');
-  sl.min = 0;
-  sl.max = total - 1;
-  sl.value = 0;
-  document.getElementById('sideSliderMax').textContent = total;
-  document.getElementById('sideSliderTotalLbl').textContent = 'of ' + total;
-  updateSideSliderTrack(sl, 0, total - 1);
+  dots.innerHTML  = '';
 
   menuItems.forEach((item, idx) => {
+    /* DOT */
+    const dot = document.createElement('div');
+    dot.className = 'reel-dot' + (idx===0?' active':'');
+    dot.style.height = idx===0 ? '22px' : '6px';
+    dot.onclick = () => scrollToCard(idx);
+    dots.appendChild(dot);
+
     /* CARD */
     const card = document.createElement('div');
     card.className = 'reel-card';
@@ -746,6 +701,28 @@ function buildReels() {
           <div class="model-loader" id="loader_${idx}">
             <div class="loader-ring"></div>
             <div class="loader-txt">読込中…</div>
+          </div>
+
+          <!-- SLIDER CONTROLS -->
+          <div class="viewer-sliders" id="sliders_${idx}">
+            <div class="slider-row">
+              <div class="slider-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 1v12M1 7h12" stroke="rgba(240,232,213,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <input type="range" class="dish-slider" id="zoom_${idx}" min="0" max="100" value="50"
+                oninput="handleZoom(this, '${idx}')" ontouchstart="stopProp(event)" ontouchmove="stopProp(event)">
+            </div>
+            <div class="slider-row">
+              <div class="slider-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 7h10M9 4l3 3-3 3" stroke="rgba(240,232,213,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <input type="range" class="dish-slider" id="rotate_${idx}" min="0" max="360" value="0"
+                oninput="handleRotate(this, '${idx}')" ontouchstart="stopProp(event)" ontouchmove="stopProp(event)">
+            </div>
           </div>
         ` : `
           <div class="viewer-no-model">
@@ -793,7 +770,7 @@ function buildReels() {
         </div>
       </div>
 
-      <!-- ACTIONS -->
+      <!-- ACTIONS: Add to Cart (full) + AR (icon) -->
       <div class="reel-actions">
         <button class="btn-add-cart" id="addCartBtn_${idx}" onclick="addToCart('${item.id}', ${idx})">
           <div class="btn-cart-counter" id="cartCounter_${idx}">0</div>
@@ -843,32 +820,37 @@ function buildReels() {
   });
 
   setupTouch();
+  updateDots(0);
   document.getElementById('globalLoader').classList.add('hide');
   setTimeout(() => { document.getElementById('globalLoader').style.display='none'; }, 700);
   document.getElementById('reelWrap').style.display = 'block';
 }
 
-/* ─── SIDE SLIDER ─── */
-function stopSlideProp(e) {
+/* ─── SLIDER CONTROLS ─── */
+function stopProp(e) {
   e.stopPropagation();
 }
 
-function updateSideSliderTrack(slider, val, max) {
-  /* vertical slider: thumb at top = idx 0, bottom = last.
-     Because we rotated 180deg, value 0 = top visually.
-     Fill percentage from top: val/max * 100 */
-  const pct = max > 0 ? (val / max * 100).toFixed(1) : 0;
-  /* We update the gradient from bottom since writing-mode + rotate maps differently.
-     Keep it simple: use a CSS var on the element */
-  slider.style.background = `linear-gradient(to top, var(--beni2) 0%, var(--beni2) ${pct}%, rgba(240,232,213,0.1) ${pct}%, rgba(240,232,213,0.1) 100%)`;
+function handleZoom(slider, idx) {
+  const mv = document.getElementById('mv_' + idx);
+  if(!mv) return;
+  const val = parseInt(slider.value);
+  // Map 0-100 to orbit radius: 100% (far) to 20% (close)
+  const radius = 100 - (val * 0.8); // 100% at 0, 20% at 100
+  const currentOrbit = mv.getCameraOrbit();
+  mv.cameraOrbit = `${currentOrbit.theta}rad ${currentOrbit.phi}rad ${radius}%`;
+  // Update slider track color
+  slider.style.setProperty('--val', val + '%');
 }
 
-function onSideSliderInput(slider) {
-  const idx = parseInt(slider.value);
-  const max = menuItems.length - 1;
-  updateSideSliderTrack(slider, idx, max);
-  document.getElementById('sideSliderIdx').textContent = idx + 1;
-  scrollToCard(idx);
+function handleRotate(slider, idx) {
+  const mv = document.getElementById('mv_' + idx);
+  if(!mv) return;
+  const deg = parseInt(slider.value);
+  const rad = (deg * Math.PI) / 180;
+  const currentOrbit = mv.getCameraOrbit();
+  mv.cameraOrbit = `${rad}rad ${currentOrbit.phi}rad ${currentOrbit.radius}`;
+  slider.style.setProperty('--val', (deg / 360 * 100) + '%');
 }
 
 /* ─── TOUCH / SCROLL NAVIGATION ─── */
@@ -878,23 +860,26 @@ function getCardH() { return window.innerHeight; }
 
 function scrollToCard(idx) {
   const total = menuItems.length;
-  idx = Math.max(0, Math.min(total - 1, idx));
+  idx = Math.max(0, Math.min(total-1, idx));
   currentIdx = idx;
   const track = document.getElementById('reelTrack');
   track.style.transform = `translateY(${-idx * getCardH()}px)`;
+  updateDots(idx);
+}
 
-  /* Sync side slider */
-  const sl = document.getElementById('sideSlider');
-  sl.value = idx;
-  updateSideSliderTrack(sl, idx, total - 1);
-  document.getElementById('sideSliderIdx').textContent = idx + 1;
+function updateDots(idx) {
+  document.querySelectorAll('.reel-dot').forEach((d,i) => {
+    d.classList.toggle('active', i===idx);
+    d.style.height = i===idx ? '22px' : '6px';
+  });
 }
 
 function setupTouch() {
   const wrap = document.getElementById('reelWrap');
 
   wrap.addEventListener('touchstart', e => {
-    if(e.target.id === 'sideSlider') return;
+    // Don't hijack slider touches
+    if(e.target.classList.contains('dish-slider')) return;
     startY = e.touches[0].clientY;
     startX = e.touches[0].clientX;
     isDragging = true;
@@ -905,6 +890,7 @@ function setupTouch() {
     isDragging = false;
     const dy = startY - e.changedTouches[0].clientY;
     const dx = Math.abs(startX - e.changedTouches[0].clientX);
+    // Only swipe vertically if mostly vertical gesture
     if(Math.abs(dy) > 50 && Math.abs(dy) > dx * 1.5) {
       scrollToCard(currentIdx + (dy > 0 ? 1 : -1));
     }
@@ -929,12 +915,14 @@ function addToCart(id, cardIdx) {
   cart[id] = (cart[id]||0) + 1;
   updateCartUI();
 
+  // Animate button
   const btn = document.getElementById('addCartBtn_' + cardIdx);
   if(btn) {
     btn.classList.add('added-pulse');
     setTimeout(() => btn.classList.remove('added-pulse'), 700);
   }
 
+  // Show counter on button
   const counter = document.getElementById('cartCounter_' + cardIdx);
   if(counter) {
     counter.textContent = cart[id];
