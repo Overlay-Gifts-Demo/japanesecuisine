@@ -20,8 +20,7 @@ html{height:100%;overflow:hidden}
 body{
   width:100vw;height:100%;overflow:hidden;
   font-family:var(--ff-ui);background:var(--ink);color:var(--paper);
-  -webkit-tap-highlight-color:transparent;
-  /* NO touch-action:none on body — let model-viewer handle its own touches */
+  -webkit-tap-highlight-color:transparent;touch-action:none;
 }
 body::before{
   content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;
@@ -47,8 +46,7 @@ body::before{
 /* LAYOUT */
 #app{position:fixed;inset:0;display:flex;overflow:hidden}
 
-/* ─── SIDE SLIDER PANEL ───
-   touch-action:none ONLY here so it captures pointer events exclusively */
+/* SIDE SLIDER PANEL */
 #sliderPanel{
   position:relative;z-index:100;
   width:42px;flex-shrink:0;
@@ -56,18 +54,19 @@ body::before{
   background:rgba(6,4,2,0.9);
   border-right:1px solid rgba(240,232,213,0.05);
   padding:calc(68px + env(safe-area-inset-top)) 0 calc(18px + env(safe-area-inset-bottom));
-  /* Capture all touch input within this panel — model-viewer is NOT inside here */
-  touch-action:none;
 }
 .sp-label{font-family:var(--ff-jp);font-size:7px;font-weight:200;color:rgba(240,232,213,0.18);letter-spacing:0.2em;writing-mode:vertical-rl;margin:6px 0}
 
 #sliderTrackWrap{
   flex:1;width:100%;position:relative;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
+  cursor:pointer;touch-action:none;
 }
+/* thin background rail */
 #sliderRail{position:absolute;left:50%;transform:translateX(-50%);width:2px;top:0;bottom:0;background:rgba(240,232,213,0.07);border-radius:1px}
+/* colored fill */
 #sliderFill{position:absolute;left:50%;transform:translateX(-50%);width:2px;top:0;height:0;background:linear-gradient(to bottom,var(--beni),var(--beni2));border-radius:1px;transition:height 0.03s linear}
+/* thumb */
 #sliderThumb{
   position:absolute;left:50%;transform:translate(-50%,0);top:0;
   width:30px;height:30px;border-radius:50%;
@@ -80,6 +79,7 @@ body::before{
 }
 #sliderThumb.active{cursor:grabbing;box-shadow:0 0 24px rgba(160,61,40,0.8),0 4px 10px rgba(0,0,0,0.6)}
 #sliderThumb::after{content:'';width:5px;height:5px;border-radius:50%;background:rgba(240,232,213,0.45)}
+/* floating name tooltip */
 #sliderTooltip{
   position:absolute;right:48px;
   background:rgba(8,6,4,0.88);border:1px solid rgba(240,232,213,0.1);border-radius:5px;
@@ -89,12 +89,8 @@ body::before{
 }
 #sliderTooltip.show{opacity:1}
 
-/* SCROLL AREA — touch-action:pan-y allows natural vertical scroll feel
-   but model-viewer children will override with their own touch-action */
-#scrollArea{
-  flex:1;overflow:hidden;position:relative;
-  touch-action:pan-y;
-}
+/* SCROLL AREA */
+#scrollArea{flex:1;overflow:hidden;position:relative}
 #cardTrack{position:absolute;top:0;left:0;right:0;will-change:transform}
 
 /* HUD */
@@ -117,13 +113,7 @@ body::before{
 .dish-card{width:100%;position:absolute;left:0;right:0;overflow:hidden;display:flex;flex-direction:column}
 .dish-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 20% 30%,rgba(122,46,30,0.22) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(184,151,58,0.1) 0%,transparent 50%),var(--ink2)}
 .dish-viewer{position:relative;z-index:5;flex:1;overflow:hidden;min-height:0}
-
-/* model-viewer: let it own ALL touch events within its bounds */
-model-viewer{
-  width:100%;height:100%;background:transparent;--poster-color:transparent;
-  /* model-viewer sets touch-action internally; don't override it */
-}
-
+model-viewer{width:100%;height:100%;background:transparent;--poster-color:transparent}
 .viewer-no-model{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .viewer-no-emoji{font-size:88px;animation:floatEmoji 4s ease-in-out infinite}
 @keyframes floatEmoji{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
@@ -133,7 +123,7 @@ model-viewer{
 .viewer-corner.tr{top:14px;right:14px;border-top:1px solid rgba(122,46,30,0.5);border-right:1px solid rgba(122,46,30,0.5)}
 .viewer-corner.bl{bottom:14px;left:14px;border-bottom:1px solid rgba(122,46,30,0.5);border-left:1px solid rgba(122,46,30,0.5)}
 .viewer-corner.br{bottom:14px;right:14px;border-bottom:1px solid rgba(122,46,30,0.5);border-right:1px solid rgba(122,46,30,0.5)}
-.viewer-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:6px;background:rgba(8,6,4,0.55);border:1px solid rgba(240,232,213,0.08);border-radius:30px;padding:5px 12px;pointer-events:none}
+.viewer-badge{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:6px;background:rgba(8,6,4,0.55);border:1px solid rgba(240,232,213,0.08);border-radius:30px;padding:5px 12px}
 .vb-dot{width:5px;height:5px;border-radius:50%;background:var(--beni2);animation:blinkDot 2s ease infinite}
 @keyframes blinkDot{0%,100%{opacity:1}50%{opacity:0.2}}
 .vb-txt{font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(240,232,213,0.45)}
@@ -170,7 +160,7 @@ model-viewer{
 .btn-ar-float-icon{font-size:18px;line-height:1}
 .btn-ar-float-txt{font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,232,213,0.4)}
 .btn-ar-float.no-model{opacity:0.35;cursor:default}
-.model-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:10px;pointer-events:none}
+.model-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;flex-direction:column;align-items:center;gap:10px}
 .loader-ring{width:32px;height:32px;border:1.5px solid rgba(122,46,30,0.15);border-top-color:var(--beni2);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(240,232,213,0.24)}
@@ -249,7 +239,7 @@ model-viewer{
 <div id="toast"></div>
 
 <div id="app" style="display:none">
-  <!-- SIDE SLIDER — touch events are ISOLATED here -->
+  <!-- SIDE SLIDER -->
   <div id="sliderPanel">
     <div class="sp-label">上</div>
     <div id="sliderTrackWrap">
@@ -259,7 +249,7 @@ model-viewer{
     <div class="sp-label">下</div>
   </div>
 
-  <!-- CONTENT — model-viewer lives inside here and owns its own touch handling -->
+  <!-- CONTENT -->
   <div id="scrollArea">
     <div id="hud">
       <div class="hud-brand">Sakura<span>さくら · Dining</span></div>
@@ -272,6 +262,7 @@ model-viewer{
   </div>
 </div>
 
+<!-- ORDER / SUCCESS remain same -->
 <div id="screenOrder">
   <div class="order-header">
     <div><div class="order-header-title">Your Order</div><div class="order-header-jp">ご注文内容</div></div>
@@ -294,99 +285,91 @@ model-viewer{
 </div>
 
 <script>
-const SHEET_ID  = '1QAReLCzWLQEfNyY9V6Cg5VbGPqmbXh4XCZ_RCQSRlz0';
-const SHEET_TAB = 'Menu';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
-const KITCHEN_WA = '917019743880', TABLE_NUMBER = '07', TABLE_INFO = 'Indoor · Window Seat';
+const SHEET_ID='1QAReLCzWLQEfNyY9V6Cg5VbGPqmbXh4XCZ_RCQSRlz0';
+const SHEET_TAB='Menu';
+const SHEET_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
+const KITCHEN_WA='917019743880',TABLE_NUMBER='07',TABLE_INFO='Indoor · Window Seat';
 
-const FALLBACK = [
-  {id:'g1', name:'Gyoza',           jp:'餃子',         category:'Starters', description:'Pan-fried pork & cabbage dumplings with ponzu dipping sauce.',              price:320, emoji:'🥟', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Gyoza/Gyoza.glb'},
-  {id:'g2', name:'Edamame',         jp:'枝豆',         category:'Starters', description:'Steamed young soybeans with Himalayan sea salt.',                           price:250, emoji:'🫘', veg:true, chef_pick:false,new:false,available:true, glb_url:'3d model/Edamame/Edamame.glb'},
-  {id:'g3', name:'Karaage',         jp:'唐揚げ',       category:'Starters', description:'Japanese crispy fried chicken with yuzu mayo and fresh lemon wedge.',       price:480, emoji:'🍗', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Karaage/Karaage.glb'},
-  {id:'g4', name:'Miso Soup',       jp:'味噌汁',       category:'Starters', description:'Traditional dashi & tofu miso soup with wakame and green onion.',          price:180, emoji:'🍵', veg:true, chef_pick:false,new:false,available:true, glb_url:'3d model/Miso Soup/Miso Soup.glb'},
-  {id:'g5', name:'Takoyaki',        jp:'たこ焼き',     category:'Starters', description:'Octopus balls with bonito flakes and takoyaki sauce. 6 pieces.',           price:390, emoji:'🐙', veg:false,chef_pick:false,new:true, available:true, glb_url:''},
-  {id:'g6', name:'Agedashi Tofu',   jp:'揚げ出し豆腐', category:'Starters', description:'Silken tofu in savory dashi broth with grated daikon and ginger.',         price:350, emoji:'🍲', veg:true, chef_pick:true, new:false,available:true, glb_url:'3d model/Agedashi Tofu/Agedashi Tofu.glb'},
-  {id:'g7', name:'Ramen',           jp:'ラーメン',     category:'Ramen',    description:'Rich tonkotsu broth with noodles, chashu pork, soft-boiled egg and nori.', price:850, emoji:'🍜', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Ramen/Ramen.glb'},
-  {id:'g8', name:'Salmon Sashimi',  jp:'サーモン刺身', category:'Sushi',    description:'Premium Atlantic salmon sashimi sliced fresh to order. 5 pieces.',         price:680, emoji:'🐟', veg:false,chef_pick:false,new:true, available:true, glb_url:'3d model/Salmon Sashimi/Salmon Sashimi.glb'},
-  {id:'g9', name:'Tempura',         jp:'天ぷら',       category:'Rice',     description:'Lightly battered prawn & vegetable tempura with tentsuyu dipping sauce.',  price:720, emoji:'🍤', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Tempura/Tempura.glb'},
-  {id:'g10',name:'Matcha Ice Cream',jp:'抹茶アイス',   category:'Drinks',   description:'Ceremonial grade green tea ice cream served with sweet red bean.',        price:280, emoji:'🍦', veg:true, chef_pick:false,new:true, available:true, glb_url:'3d model/Matcha Ice Cream/Matcha Ice Cream.glb'},
+const FALLBACK=[
+  {id:'g1', name:'Gyoza',          jp:'餃子',         category:'Starters', description:'Pan-fried pork & cabbage dumplings with ponzu dipping sauce.',              price:320, emoji:'🥟', veg:false,chef_pick:true, new:false,available:true,glb_url:'3d model/Gyoza/Gyoza.glb'},
+  {id:'g2', name:'Edamame',        jp:'枝豆',         category:'Starters', description:'Steamed young soybeans with Himalayan sea salt.',                           price:250, emoji:'🫘', veg:true, chef_pick:false,new:false,available:true,glb_url:'3d model/Edamame/Edamame.glb'},
+  {id:'g3', name:'Karaage',        jp:'唐揚げ',       category:'Starters', description:'Japanese crispy fried chicken with yuzu mayo and fresh lemon wedge.',       price:480, emoji:'🍗', veg:false,chef_pick:true, new:false,available:true,glb_url:'3d model/Karaage/Karaage.glb'},
+  {id:'g4', name:'Miso Soup',      jp:'味噌汁',       category:'Starters', description:'Traditional dashi & tofu miso soup with wakame and green onion.',          price:180, emoji:'🍵', veg:true, chef_pick:false,new:false,available:true,glb_url:'3d model/Miso Soup/Miso Soup.glb'},
+  {id:'g5', name:'Takoyaki',       jp:'たこ焼き',     category:'Starters', description:'Octopus balls with bonito flakes and takoyaki sauce. 6 pieces.',           price:390, emoji:'🐙', veg:false,chef_pick:false,new:true, available:true,glb_url:''},
+  {id:'g6', name:'Agedashi Tofu',  jp:'揚げ出し豆腐', category:'Starters', description:'Silken tofu in savory dashi broth with grated daikon and ginger.',         price:350, emoji:'🍲', veg:true, chef_pick:true, new:false,available:true,glb_url:'3d model/Agedashi Tofu/Agedashi Tofu.glb'},
+  {id:'g7', name:'Ramen',          jp:'ラーメン',     category:'Ramen',    description:'Rich tonkotsu broth with noodles, chashu pork, soft-boiled egg and nori.', price:850, emoji:'🍜', veg:false,chef_pick:true, new:false,available:true,glb_url:'3d model/Ramen/Ramen.glb'},
+  {id:'g8', name:'Salmon Sashimi', jp:'サーモン刺身', category:'Sushi',    description:'Premium Atlantic salmon sashimi sliced fresh to order. 5 pieces.',         price:680, emoji:'🐟', veg:false,chef_pick:false,new:true, available:true,glb_url:'3d model/Salmon Sashimi/Salmon Sashimi.glb'},
+  {id:'g9', name:'Tempura',        jp:'天ぷら',       category:'Rice',     description:'Lightly battered prawn & vegetable tempura with tentsuyu dipping sauce.',  price:720, emoji:'🍤', veg:false,chef_pick:true, new:false,available:true,glb_url:'3d model/Tempura/Tempura.glb'},
+  {id:'g10',name:'Matcha Ice Cream',jp:'抹茶アイス',  category:'Drinks',   description:'Ceremonial grade green tea ice cream served with sweet red bean.',        price:280, emoji:'🍦', veg:true, chef_pick:false,new:true, available:true,glb_url:'3d model/Matcha Ice Cream/Matcha Ice Cream.glb'},
 ];
 
-let menuItems = [], cart = {};
-let scrollY = 0, targetY = 0, viewH = 0, totalScrollH = 0;
-let sliderDragging = false;  // ONLY true when finger is on #sliderPanel
-let tooltipTimer = null;
+let menuItems=[],cart={};
 
-/* ════════════════════════════════
-   FETCH MENU
-════════════════════════════════ */
-async function fetchMenu() {
-  try {
-    const res  = await fetch(SHEET_URL);
-    const text = await res.text();
-    const m    = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
-    if (!m) throw 0;
-    const json = JSON.parse(m[1]);
-    const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
-    const get  = (r, col) => { const i = cols.indexOf(col); return (i >= 0 && r.c[i] && r.c[i].v != null) ? String(r.c[i].v).trim() : ''; };
-    menuItems  = json.table.rows.filter(r => r && r.c).map((r, i) => ({
-      id: get(r,'id') || 'i'+i, name: get(r,'name'), jp: get(r,'jp_name'),
-      category: get(r,'category'), description: get(r,'description'),
-      price: parseInt(get(r,'price')) || 0, emoji: get(r,'emoji') || '🍽️',
-      veg:       get(r,'veg').toLowerCase()       === 'yes',
-      chef_pick: get(r,'chef_pick').toLowerCase() === 'yes',
-      new:       get(r,'new').toLowerCase()        === 'yes',
-      available: get(r,'available').toLowerCase()  !== 'no',
-      glb_url:   get(r,'glb_url'),
-    })).filter(i => i.name);
-  } catch(e) { menuItems = FALLBACK; }
+/* ── scroll engine ── */
+let scrollY=0,targetY=0,viewH=0,totalScrollH=0;
+let animId=null;
+
+/* ── slider drag ── */
+let isDragging=false;
+let tooltipTimer=null;
+
+async function fetchMenu(){
+  try{
+    const res=await fetch(SHEET_URL);
+    const text=await res.text();
+    const m=text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
+    if(!m) throw 0;
+    const json=JSON.parse(m[1]);
+    const cols=json.table.cols.map(c=>c.label.toLowerCase().trim());
+    const get=(r,col)=>{const i=cols.indexOf(col);return(i>=0&&r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():''};
+    menuItems=json.table.rows.filter(r=>r&&r.c).map((r,i)=>({
+      id:get(r,'id')||'i'+i,name:get(r,'name'),jp:get(r,'jp_name'),
+      category:get(r,'category'),description:get(r,'description'),
+      price:parseInt(get(r,'price'))||0,emoji:get(r,'emoji')||'🍽️',
+      veg:get(r,'veg').toLowerCase()==='yes',
+      chef_pick:get(r,'chef_pick').toLowerCase()==='yes',
+      new:get(r,'new').toLowerCase()==='yes',
+      available:get(r,'available').toLowerCase()!=='no',
+      glb_url:get(r,'glb_url'),
+    })).filter(i=>i.name);
+  }catch(e){menuItems=FALLBACK}
   buildMenu();
 }
 
-/* ════════════════════════════════
-   BUILD CARDS
-════════════════════════════════ */
-function buildMenu() {
-  viewH        = window.innerHeight;
-  totalScrollH = (menuItems.length - 1) * viewH;
+function buildMenu(){
+  viewH=window.innerHeight;
+  totalScrollH=(menuItems.length-1)*viewH;
 
-  const track = document.getElementById('cardTrack');
-  track.innerHTML = '';
-  track.style.height = (menuItems.length * viewH) + 'px';
+  const track=document.getElementById('cardTrack');
+  track.innerHTML='';
+  track.style.height=(menuItems.length*viewH)+'px';
 
-  menuItems.forEach((item, idx) => {
-    const pills = [];
-    if (item.veg)       pills.push('<span class="info-pill pill-veg">野菜 Veg</span>');
-    if (item.chef_pick) pills.push('<span class="info-pill pill-chef">★ 料理長</span>');
-    if (item.new)       pills.push('<span class="info-pill pill-new">New 新品</span>');
-    const has3d = !!(item.glb_url && item.glb_url.trim());
+  menuItems.forEach((item,idx)=>{
+    const pills=[];
+    if(item.veg)       pills.push('<span class="info-pill pill-veg">野菜 Veg</span>');
+    if(item.chef_pick) pills.push('<span class="info-pill pill-chef">★ 料理長</span>');
+    if(item.new)       pills.push('<span class="info-pill pill-new">New 新品</span>');
+    const has3d=!!(item.glb_url&&item.glb_url.trim());
 
-    const card = document.createElement('div');
-    card.className = 'dish-card';
-    card.style.top    = (idx * viewH) + 'px';
-    card.style.height = viewH + 'px';
-
-    card.innerHTML = `
+    const card=document.createElement('div');
+    card.className='dish-card';
+    card.style.top=(idx*viewH)+'px';
+    card.style.height=viewH+'px';
+    card.innerHTML=`
 <div class="dish-bg"></div>
 <div class="dish-viewer" id="viewer_${idx}">
-  ${has3d ? `
-    <model-viewer id="mv_${idx}"
-      src="${item.glb_url}"
-      ios-src="${item.glb_url.replace('.glb','.usdz')}"
-      alt="${item.name}"
-      ar ar-modes="webxr scene-viewer quick-look"
-      ar-scale="fixed" ar-placement="floor"
-      shadow-intensity="1.2" shadow-softness="0.7"
-      exposure="1.1" environment-image="neutral"
+  ${has3d?`
+    <model-viewer id="mv_${idx}" src="${item.glb_url}" ios-src="${item.glb_url.replace('.glb','.usdz')}" alt="${item.name}"
+      ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor"
+      shadow-intensity="1.2" shadow-softness="0.7" exposure="1.1" environment-image="neutral"
       camera-controls interaction-prompt="none"
-      min-camera-orbit="auto auto 5%" max-camera-orbit="auto auto 200%"
-      xr-environment
+      min-camera-orbit="auto auto 5%" max-camera-orbit="auto auto 200%" xr-environment
       style="width:100%;height:100%;background:transparent;--poster-color:transparent"></model-viewer>
     <div class="model-loader" id="loader_${idx}"><div class="loader-ring"></div><div class="loader-txt">読込中…</div></div>
-  ` : `<div class="viewer-no-model"><div class="viewer-no-emoji">${item.emoji}</div><div class="viewer-no-txt">3D Preview Coming Soon</div></div>`}
+  `:`<div class="viewer-no-model"><div class="viewer-no-emoji">${item.emoji}</div><div class="viewer-no-txt">3D Preview Coming Soon</div></div>`}
   <div class="viewer-corner tl"></div><div class="viewer-corner tr"></div>
   <div class="viewer-corner bl"></div><div class="viewer-corner br"></div>
-  <div class="viewer-badge"><div class="vb-dot"></div><div class="vb-txt">${has3d ? '3D · ドラッグで回転' : '料理プレビュー'}</div></div>
+  <div class="viewer-badge"><div class="vb-dot"></div><div class="vb-txt">${has3d?'3D · ドラッグで回転':'料理プレビュー'}</div></div>
 </div>
 <div class="sumi-line"><svg viewBox="0 0 320 8" fill="none"><path d="M10 5 Q80 1 160 4 Q240 7 310 3" stroke="rgba(122,46,30,0.45)" stroke-width="2" stroke-linecap="round"/><path d="M10 6 Q80 3 160 5 Q240 8 310 5" stroke="rgba(122,46,30,0.12)" stroke-width="0.8" stroke-linecap="round"/></svg></div>
 <div class="dish-info">
@@ -399,271 +382,230 @@ function buildMenu() {
   <button class="btn-add-cart" id="addCartBtn_${idx}" onclick="addToCart('${item.id}',${idx})">
     <div class="btn-cart-counter" id="cartCounter_${idx}">0</div>
     <div class="btn-add-cart-icon">🛒</div>
-    <div class="btn-add-cart-text">
-      <div class="btn-add-cart-main">カートに追加 · Add to Cart</div>
-      <div class="btn-add-cart-sub">₹ ${item.price.toLocaleString('en-IN')} per item</div>
-    </div>
+    <div class="btn-add-cart-text"><div class="btn-add-cart-main">カートに追加 · Add to Cart</div><div class="btn-add-cart-sub">₹ ${item.price.toLocaleString('en-IN')} per item</div></div>
   </button>
   ${has3d
-    ? `<button class="btn-ar-float" onclick="triggerAR('${idx}')"><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
-    : `<button class="btn-ar-float no-model" disabled><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.35"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
+    ?`<button class="btn-ar-float" onclick="triggerAR('${idx}')"><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
+    :`<button class="btn-ar-float no-model" disabled><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.35"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
   }
 </div>`;
     track.appendChild(card);
 
-    if (has3d) {
-      const mv = card.querySelector('#mv_'  + idx);
-      const ld = card.querySelector('#loader_' + idx);
-      if (mv && ld) {
-        ld.style.display = 'flex';
-        mv.addEventListener('load', () => { ld.style.display = 'none'; }, { once: true });
-        setTimeout(() => { if (ld) ld.style.display = 'none'; }, 15000);
+    if(has3d){
+      const mv=card.querySelector('#mv_'+idx);
+      const ld=card.querySelector('#loader_'+idx);
+      if(mv&&ld){
+        ld.style.display='flex';
+        mv.addEventListener('load',()=>{ld.style.display='none'},{once:true});
+        setTimeout(()=>{if(ld)ld.style.display='none'},15000);
       }
     }
   });
 
   initSliderDrag();
-  initScrollArea();
-  startRafLoop();
+  initTouchSwipe();
+  initWheel();
+  startLoop();
 
   document.getElementById('globalLoader').classList.add('hide');
-  setTimeout(() => { document.getElementById('globalLoader').style.display = 'none'; }, 700);
-  document.getElementById('app').style.display = 'flex';
+  setTimeout(()=>{document.getElementById('globalLoader').style.display='none'},700);
+  document.getElementById('app').style.display='flex';
 }
 
 /* ════════════════════════════════
-   RAF LOOP
+   RAF LOOP — lerp scroll
 ════════════════════════════════ */
-function startRafLoop() {
-  function loop() {
-    const diff = targetY - scrollY;
-    scrollY += sliderDragging ? diff : diff * 0.1;
-    if (Math.abs(diff) < 0.15) scrollY = targetY;
-    scrollY = Math.max(0, Math.min(totalScrollH, scrollY));
-    document.getElementById('cardTrack').style.transform = `translateY(${-scrollY}px)`;
+function startLoop(){
+  function loop(){
+    const diff=targetY-scrollY;
+    // while dragging: instant follow; otherwise smooth lerp
+    scrollY+=isDragging ? diff : diff*0.1;
+    if(Math.abs(diff)<0.15) scrollY=targetY;
+
+    scrollY=Math.max(0,Math.min(totalScrollH,scrollY));
+    document.getElementById('cardTrack').style.transform=`translateY(${-scrollY}px)`;
     syncSliderVisual();
-    requestAnimationFrame(loop);
+    animId=requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+  animId=requestAnimationFrame(loop);
 }
 
 /* ════════════════════════════════
-   SLIDER — pointer events on #sliderPanel ONLY
-   Uses setPointerCapture so the drag is fully owned
-   by the slider panel and never leaks to model-viewer
+   SIDE SLIDER DRAG (custom, full panel height)
 ════════════════════════════════ */
-function initSliderDrag() {
-  const wrap    = document.getElementById('sliderTrackWrap');
-  const tooltip = document.getElementById('sliderTooltip');
+function initSliderDrag(){
+  const wrap=document.getElementById('sliderTrackWrap');
+  const tooltip=document.getElementById('sliderTooltip');
 
-  function progressFromClientY(clientY) {
-    const r = wrap.getBoundingClientRect();
-    return Math.max(0, Math.min(1, (clientY - r.top) / r.height));
+  function progressFromY(clientY){
+    const r=wrap.getBoundingClientRect();
+    return Math.max(0,Math.min(1,(clientY-r.top)/r.height));
   }
-  function applyProgress(p) {
-    targetY = p * totalScrollH;
-    const idx  = Math.min(menuItems.length - 1, Math.round(p * (menuItems.length - 1)));
-    const item = menuItems[idx];
-    tooltip.textContent = (idx + 1) + ' · ' + (item ? item.name : '');
+  function applyProgress(p){
+    targetY=p*totalScrollH;
+    const idx=Math.min(menuItems.length-1,Math.round(p*(menuItems.length-1)));
+    const item=menuItems[idx];
+    tooltip.textContent=(idx+1)+' · '+(item?item.name:'');
     tooltip.classList.add('show');
     clearTimeout(tooltipTimer);
   }
-  function endDrag() {
-    sliderDragging = false;
+  function endDrag(){
+    isDragging=false;
     document.getElementById('sliderThumb').classList.remove('active');
-    tooltipTimer = setTimeout(() => tooltip.classList.remove('show'), 900);
+    tooltipTimer=setTimeout(()=>tooltip.classList.remove('show'),900);
   }
 
-  // Pointer events: captures the pointer so ALL subsequent moves are
-  // delivered to #sliderTrackWrap even if the finger moves outside it.
-  // This is completely separate from the model-viewer's touch handling.
-  wrap.addEventListener('pointerdown', e => {
-    sliderDragging = true;
-    wrap.setPointerCapture(e.pointerId);   // claim this pointer exclusively
+  /* POINTER EVENTS — works for both mouse and touch */
+  wrap.addEventListener('pointerdown',e=>{
+    isDragging=true;
+    wrap.setPointerCapture(e.pointerId);
     document.getElementById('sliderThumb').classList.add('active');
-    applyProgress(progressFromClientY(e.clientY));
+    applyProgress(progressFromY(e.clientY));
     e.preventDefault();
-    e.stopPropagation();                   // don't let it reach scrollArea
   });
-  wrap.addEventListener('pointermove', e => {
-    if (!sliderDragging) return;
-    applyProgress(progressFromClientY(e.clientY));
+  wrap.addEventListener('pointermove',e=>{
+    if(!isDragging) return;
+    applyProgress(progressFromY(e.clientY));
     e.preventDefault();
-    e.stopPropagation();
   });
-  wrap.addEventListener('pointerup',     endDrag);
-  wrap.addEventListener('pointercancel', endDrag);
+  wrap.addEventListener('pointerup',endDrag);
+  wrap.addEventListener('pointercancel',endDrag);
 }
 
-function syncSliderVisual() {
-  const p     = totalScrollH > 0 ? scrollY / totalScrollH : 0;
-  const wrap  = document.getElementById('sliderTrackWrap');
-  const thumb = document.getElementById('sliderThumb');
-  const fill  = document.getElementById('sliderFill');
-  if (!wrap || !thumb) return;
-  const wh     = wrap.clientHeight;
-  const th     = thumb.clientHeight || 30;
-  const usable = wh - th;
-  const top    = Math.max(0, Math.min(usable, p * usable));
-  thumb.style.top     = top + 'px';
-  fill.style.height   = (top + th / 2) + 'px';
+function syncSliderVisual(){
+  const p=totalScrollH>0?scrollY/totalScrollH:0;
+  const wrap=document.getElementById('sliderTrackWrap');
+  const thumb=document.getElementById('sliderThumb');
+  const fill=document.getElementById('sliderFill');
+  if(!wrap||!thumb) return;
+  const wh=wrap.clientHeight;
+  const th=thumb.clientHeight||30;
+  const usable=wh-th;
+  const top=Math.max(0,Math.min(usable,p*usable));
+  thumb.style.top=top+'px';
+  fill.style.height=(top+(th/2))+'px';
 }
 
 /* ════════════════════════════════
-   SCROLL AREA — touch/wheel/keyboard
-   These only fire when the touch STARTS in #scrollArea,
-   so model-viewer's internal touch handling runs first
-   for touches that start on the model.
-   
-   Key insight: model-viewer calls e.stopPropagation()
-   internally, so swipe-to-scroll only works when the
-   user starts their touch on the non-model parts
-   (info panel, actions bar).
+   TOUCH SWIPE on content
 ════════════════════════════════ */
-function initScrollArea() {
-  const area = document.getElementById('scrollArea');
+let touchY0=0,targetY0=0,velY=0,lastY=0,lastT=0;
+let flingId=null;
 
-  // ── TOUCH SWIPE (only on non-model areas) ──
-  let touchStartY = 0, touchTargetY0 = 0, velY = 0, lastTY = 0, lastTTime = 0;
-  let flingId = null;
-  let touchOnModel = false;
-
-  area.addEventListener('touchstart', e => {
-    // Check if the touch started on a model-viewer element
-    touchOnModel = !!e.target.closest('model-viewer');
-    if (touchOnModel) return;  // model-viewer will handle it
-
+function initTouchSwipe(){
+  const area=document.getElementById('scrollArea');
+  area.addEventListener('touchstart',e=>{
+    if(isDragging) return;
     cancelAnimationFrame(flingId);
-    touchStartY  = e.touches[0].clientY;
-    touchTargetY0 = targetY;
-    velY = 0; lastTY = touchStartY; lastTTime = Date.now();
-  }, { passive: true });
-
-  area.addEventListener('touchmove', e => {
-    if (touchOnModel) return;  // let model-viewer handle rotation
-    const now = Date.now(), cy = e.touches[0].clientY;
-    velY = (lastTY - cy) / ((now - lastTTime) || 1);
-    lastTY = cy; lastTTime = now;
-    targetY = Math.max(0, Math.min(totalScrollH, touchTargetY0 + (touchStartY - cy)));
-  }, { passive: true });
-
-  area.addEventListener('touchend', () => {
-    if (touchOnModel) { touchOnModel = false; return; }
-    let v = velY * 16;
-    function fling() {
-      if (Math.abs(v) < 0.3) return;
-      targetY = Math.max(0, Math.min(totalScrollH, targetY + v));
-      v *= 0.9;
-      flingId = requestAnimationFrame(fling);
+    touchY0=e.touches[0].clientY;
+    targetY0=targetY;
+    velY=0; lastY=touchY0; lastT=Date.now();
+  },{passive:true});
+  area.addEventListener('touchmove',e=>{
+    if(isDragging) return;
+    const now=Date.now(),cy=e.touches[0].clientY;
+    velY=(lastY-cy)/(now-lastT||1);
+    lastY=cy; lastT=now;
+    targetY=Math.max(0,Math.min(totalScrollH,targetY0+(touchY0-cy)));
+  },{passive:true});
+  area.addEventListener('touchend',()=>{
+    if(isDragging) return;
+    let v=velY*16;
+    function fling(){
+      if(Math.abs(v)<0.3) return;
+      targetY=Math.max(0,Math.min(totalScrollH,targetY+v));
+      v*=0.9;
+      flingId=requestAnimationFrame(fling);
     }
-    flingId = requestAnimationFrame(fling);
-  }, { passive: true });
+    flingId=requestAnimationFrame(fling);
+  },{passive:true});
+}
 
-  // ── WHEEL ──
-  area.addEventListener('wheel', e => {
+function initWheel(){
+  document.getElementById('scrollArea').addEventListener('wheel',e=>{
     e.preventDefault();
-    targetY = Math.max(0, Math.min(totalScrollH, targetY + e.deltaY * 1.1));
-  }, { passive: false });
-
-  // ── KEYBOARD ──
-  document.addEventListener('keydown', e => {
-    const s = viewH * 0.75;
-    if (e.key === 'ArrowDown') targetY = Math.min(totalScrollH, targetY + s);
-    if (e.key === 'ArrowUp')   targetY = Math.max(0, targetY - s);
+    targetY=Math.max(0,Math.min(totalScrollH,targetY+e.deltaY*1.1));
+  },{passive:false});
+  document.addEventListener('keydown',e=>{
+    const s=viewH*0.75;
+    if(e.key==='ArrowDown') targetY=Math.min(totalScrollH,targetY+s);
+    if(e.key==='ArrowUp')   targetY=Math.max(0,targetY-s);
   });
 }
 
-/* ════════════════════════════════
-   AR / CART / ORDER
-════════════════════════════════ */
-function triggerAR(idx) {
-  const mv = document.getElementById('mv_' + idx);
-  if (mv) mv.activateAR();
-}
+/* ════ AR / CART / ORDER ════ */
+function triggerAR(idx){const mv=document.getElementById('mv_'+idx);if(mv)mv.activateAR()}
 
-function addToCart(id, cardIdx) {
-  const item = menuItems.find(i => i.id === id);
-  if (!item || !item.available) return;
-  cart[id] = (cart[id] || 0) + 1;
-  updateCartUI();
-  const btn = document.getElementById('addCartBtn_' + cardIdx);
-  if (btn) { btn.classList.add('added-pulse'); setTimeout(() => btn.classList.remove('added-pulse'), 700); }
-  const c = document.getElementById('cartCounter_' + cardIdx);
-  if (c) { c.textContent = cart[id]; c.classList.add('show'); }
-  showToast(item.emoji + ' ' + item.name + ' added');
+function addToCart(id,cardIdx){
+  const item=menuItems.find(i=>i.id===id);
+  if(!item||!item.available) return;
+  cart[id]=(cart[id]||0)+1; updateCartUI();
+  const btn=document.getElementById('addCartBtn_'+cardIdx);
+  if(btn){btn.classList.add('added-pulse');setTimeout(()=>btn.classList.remove('added-pulse'),700)}
+  const c=document.getElementById('cartCounter_'+cardIdx);
+  if(c){c.textContent=cart[id];c.classList.add('show')}
+  showToast(item.emoji+' '+item.name+' added');
 }
-
-function updateCartUI() {
-  const n  = Object.values(cart).reduce((a, b) => a + b, 0);
-  const el = document.getElementById('hudCartCount');
-  el.textContent = n; el.classList.toggle('show', n > 0);
+function updateCartUI(){
+  const n=Object.values(cart).reduce((a,b)=>a+b,0);
+  const el=document.getElementById('hudCartCount');
+  el.textContent=n; el.classList.toggle('show',n>0);
 }
-
-function openOrder() {
-  const body = document.getElementById('orderBody');
-  body.innerHTML = '';
-  let total = 0;
-  const entries = Object.entries(cart).filter(([, q]) => q > 0);
-  if (!entries.length) {
-    body.innerHTML = '<div style="text-align:center;padding:40px 20px;color:rgba(240,232,213,0.3);font-family:var(--ff-en);font-size:18px;font-style:italic;">Your order is empty<br><small style="font-size:12px;font-family:var(--ff-jp);font-weight:200">まだ注文がありません</small></div>';
+function openOrder(){
+  const body=document.getElementById('orderBody'); body.innerHTML='';
+  let total=0;
+  const entries=Object.entries(cart).filter(([,q])=>q>0);
+  if(!entries.length){
+    body.innerHTML='<div style="text-align:center;padding:40px 20px;color:rgba(240,232,213,0.3);font-family:var(--ff-en);font-size:18px;font-style:italic;">Your order is empty<br><small style="font-size:12px;font-family:var(--ff-jp);font-weight:200">まだ注文がありません</small></div>';
   } else {
-    entries.forEach(([id, qty]) => {
-      const item = menuItems.find(i => i.id === id); if (!item) return;
-      const sub  = item.price * qty; total += sub;
-      const row  = document.createElement('div'); row.className = 'order-item-row';
-      row.innerHTML = `<div class="orow-emoji">${item.emoji}</div><div class="orow-info"><div class="orow-name">${item.name}</div><div class="orow-jp">${item.jp||''}</div><div class="orow-price">₹ ${sub.toLocaleString('en-IN')}</div></div><div class="orow-qty"><button class="qty-b" onclick="changeCartQty('${id}')">−</button><div class="qty-n">${qty}</div><button class="qty-b" onclick="addToCartDirect('${id}')">+</button></div>`;
+    entries.forEach(([id,qty])=>{
+      const item=menuItems.find(i=>i.id===id); if(!item) return;
+      const sub=item.price*qty; total+=sub;
+      const row=document.createElement('div'); row.className='order-item-row';
+      row.innerHTML=`<div class="orow-emoji">${item.emoji}</div><div class="orow-info"><div class="orow-name">${item.name}</div><div class="orow-jp">${item.jp||''}</div><div class="orow-price">₹ ${sub.toLocaleString('en-IN')}</div></div><div class="orow-qty"><button class="qty-b" onclick="changeCartQty('${id}')">−</button><div class="qty-n">${qty}</div><button class="qty-b" onclick="addToCartDirect('${id}')">+</button></div>`;
       body.appendChild(row);
     });
   }
-  document.getElementById('orderTotal').textContent = '₹ ' + total.toLocaleString('en-IN');
+  document.getElementById('orderTotal').textContent='₹ '+total.toLocaleString('en-IN');
   document.getElementById('screenOrder').classList.add('show');
 }
-function closeOrder()  { document.getElementById('screenOrder').classList.remove('show'); }
-function changeCartQty(id) { if (!cart[id]) return; cart[id]--; if (cart[id] <= 0) delete cart[id]; updateCartUI(); syncCounters(); openOrder(); }
-function addToCartDirect(id) { cart[id] = (cart[id] || 0) + 1; updateCartUI(); syncCounters(); openOrder(); }
-function syncCounters() {
-  menuItems.forEach((item, idx) => {
-    const c = document.getElementById('cartCounter_' + idx); if (!c) return;
-    const q = cart[item.id] || 0; c.textContent = q; c.classList.toggle('show', q > 0);
-  });
-}
-
-function placeOrder() {
-  const entries = Object.entries(cart).filter(([, q]) => q > 0); if (!entries.length) return;
-  const note = document.getElementById('specialNote').value.trim();
-  let total = 0; const snap = [];
-  entries.forEach(([id, qty]) => { const item = menuItems.find(i => i.id === id); if (!item) return; snap.push({item, qty}); total += item.price * qty; });
-  const orderId = '#ORD-' + Math.floor(1000 + Math.random() * 9000);
-  const now  = new Date();
-  const time = now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', hour12:true});
-  const date = now.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
-  let lines = '';
-  snap.forEach(({item, qty}) => { lines += item.name.padEnd(18) + ' ×' + qty + '  ₹' + (item.price * qty).toLocaleString('en-IN') + '\n'; });
-  const msg = `🍽️ *NEW ORDER — KOT*\n━━━━━━━━━━━━━━━━━━━━\n*Table  :* ${TABLE_NUMBER}\n*Seat   :* ${TABLE_INFO}\n*Order  :* ${orderId}\n*Time   :* ${time}, ${date}\n━━━━━━━━━━━━━━━━━━━━\n${lines}━━━━━━━━━━━━━━━━━━━━\n*TOTAL  :* ₹${total.toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━${note ? '\n📝 *Note:* ' + note : ''}\n_Sent via Sakura AR Menu · さくら_`;
-  let preview = '';
-  snap.forEach(({item, qty}) => { preview += item.name + ' × ' + qty + '  ₹' + (item.price * qty).toLocaleString('en-IN') + '\n'; });
-  preview += '\n合計: ₹' + total.toLocaleString('en-IN');
-  if (note) preview += '\n📝 ' + note;
-  document.getElementById('kotBody').textContent = preview;
+function closeOrder(){document.getElementById('screenOrder').classList.remove('show')}
+function changeCartQty(id){if(!cart[id]) return;cart[id]--;if(cart[id]<=0) delete cart[id];updateCartUI();syncCounters();openOrder()}
+function addToCartDirect(id){cart[id]=(cart[id]||0)+1;updateCartUI();syncCounters();openOrder()}
+function syncCounters(){menuItems.forEach((item,idx)=>{const c=document.getElementById('cartCounter_'+idx);if(!c) return;const q=cart[item.id]||0;c.textContent=q;c.classList.toggle('show',q>0)})}
+function placeOrder(){
+  const entries=Object.entries(cart).filter(([,q])=>q>0); if(!entries.length) return;
+  const note=document.getElementById('specialNote').value.trim();
+  let total=0; const snap=[];
+  entries.forEach(([id,qty])=>{const item=menuItems.find(i=>i.id===id);if(!item) return;snap.push({item,qty});total+=item.price*qty});
+  const orderId='#ORD-'+Math.floor(1000+Math.random()*9000);
+  const now=new Date();
+  const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const date=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  let lines='';
+  snap.forEach(({item,qty})=>{lines+=item.name.padEnd(18)+' ×'+qty+'  ₹'+(item.price*qty).toLocaleString('en-IN')+'\n'});
+  const msg=`🍽️ *NEW ORDER — KOT*\n━━━━━━━━━━━━━━━━━━━━\n*Table  :* ${TABLE_NUMBER}\n*Seat   :* ${TABLE_INFO}\n*Order  :* ${orderId}\n*Time   :* ${time}, ${date}\n━━━━━━━━━━━━━━━━━━━━\n${lines}━━━━━━━━━━━━━━━━━━━━\n*TOTAL  :* ₹${total.toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━${note?'\n📝 *Note:* '+note:''}\n_Sent via Sakura AR Menu · さくら_`;
+  let preview='';
+  snap.forEach(({item,qty})=>{preview+=item.name+' × '+qty+'  ₹'+(item.price*qty).toLocaleString('en-IN')+'\n'});
+  preview+='\n合計: ₹'+total.toLocaleString('en-IN');
+  if(note) preview+='\n📝 '+note;
+  document.getElementById('kotBody').textContent=preview;
   closeOrder();
   document.getElementById('successOverlay').classList.add('show');
-  setTimeout(() => window.open('https://wa.me/' + KITCHEN_WA + '?text=' + encodeURIComponent(msg), '_blank'), 500);
-  Object.keys(cart).forEach(k => delete cart[k]);
-  document.getElementById('specialNote').value = '';
+  setTimeout(()=>window.open('https://wa.me/'+KITCHEN_WA+'?text='+encodeURIComponent(msg),'_blank'),500);
+  Object.keys(cart).forEach(k=>delete cart[k]);
+  document.getElementById('specialNote').value='';
   updateCartUI(); syncCounters();
 }
-function closeSuccess() { document.getElementById('successOverlay').classList.remove('show'); }
-function showToast(msg) { const t = document.getElementById('toast'); t.textContent = '✓ ' + msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+function closeSuccess(){document.getElementById('successOverlay').classList.remove('show')}
+function showToast(msg){const t=document.getElementById('toast');t.textContent='✓ '+msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
 
-async function init() {
+async function init(){
   await fetchMenu();
-  setTimeout(() => {
-    document.getElementById('splash').classList.add('out');
-    setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 1000);
-  }, 4000);
+  setTimeout(()=>{document.getElementById('splash').classList.add('out');setTimeout(()=>{document.getElementById('splash').style.display='none'},1000)},4000);
 }
 init();
-document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('contextmenu',e=>e.preventDefault());
 </script>
 </body>
 </html>
