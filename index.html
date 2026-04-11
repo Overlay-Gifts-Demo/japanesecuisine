@@ -50,7 +50,7 @@ body::before{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;
 #sliderTooltip.show{opacity:1}
 #scrollArea{flex:1;overflow:hidden;position:relative;touch-action:pan-y;}
 #cardTrack{position:absolute;top:0;left:0;right:0;will-change:transform}
-#hud{position:fixed;top:0;left:42px;right:0;z-index:50;padding:calc(14px + env(safe-area-inset-top)) 18px 10px;background:linear-gradient(to bottom,rgba(8,6,4,0.92) 0%,transparent 100%);display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+#hud{position:fixed;top:0;left:42px;right:0;z-index:50;padding:calc(14px + env(safe-area-inset-top)) 18px 10px;background:linear-gradient(to bottom,rgba(8,6,4,0.92) 0%,transparent 100%);display:flex;flex-direction:column;gap:7px;pointer-events:all;}
 .hud-row1{display:flex;align-items:center;justify-content:space-between;pointer-events:all}
 .hud-brand{font-family:var(--ff-en);font-size:22px;font-weight:400;letter-spacing:0.12em}
 .hud-brand span{font-family:var(--ff-jp);font-size:10px;font-weight:200;letter-spacing:0.3em;color:rgba(240,232,213,0.35);display:block}
@@ -201,22 +201,17 @@ model-viewer{width:100%;height:100%;background:transparent;--poster-color:transp
         <div class="hud-right">
   <div class="hud-table">七番卓 · Table 07</div>
 
-  <!-- 🎮 Fun Zone -->
-  <button onclick="openFunZone()" style="padding:6px 10px;border-radius:6px;background:#7A2E1E;color:white;border:none;cursor:pointer;font-size:11px;">
-    🎮 Fun Zone
-  </button>
-
   <div class="hud-cart-btn" onclick="openOrder()">🛍<div class="hud-cart-count" id="hudCartCount">0</div></div>
         </div>
       </div>
       <div class="lang-switcher">
-        <button class="lang-btn active" onclick="setLang('en')" id="lb-en">EN</button>
-        <button class="lang-btn" onclick="setLang('jp')" id="lb-jp">日本語</button>
-        <button class="lang-btn" onclick="setLang('hi')" id="lb-hi">हिन्दी</button>
-        <button class="lang-btn" onclick="setLang('kn')" id="lb-kn">ಕನ್ನಡ</button>
-        <button class="lang-btn" onclick="setLang('ta')" id="lb-ta">தமிழ்</button>
-        <button class="lang-btn" onclick="setLang('ml')" id="lb-ml">മലയാളം</button>
-        <button class="lang-btn" onclick="setLang('te')" id="lb-te">తెలుగు</button>
+<button class="lang-btn active" onclick="setLang('en')" id="lb-en" style="color:#ffffff;">EN</button>
+<button class="lang-btn" onclick="setLang('jp')" id="lb-jp" style="color:#ffffff;">日本語</button>
+<button class="lang-btn" onclick="setLang('hi')" id="lb-hi" style="color:#ffffff;">हिन्दी</button>
+<button class="lang-btn" onclick="setLang('kn')" id="lb-kn" style="color:#ffffff;">ಕನ್ನಡ</button>
+<button class="lang-btn" onclick="setLang('ta')" id="lb-ta" style="color:#ffffff;">தமிழ்</button>
+<button class="lang-btn" onclick="setLang('ml')" id="lb-ml" style="color:#ffffff;">മലയാളം</button>
+<button class="lang-btn" onclick="setLang('te')" id="lb-te" style="color:#ffffff;">తెలుగు</button>
       </div>
     </div>
     <div id="cardTrack"></div>
@@ -725,127 +720,6 @@ function wcShowToast(msg){
   setTimeout(()=>t.classList.remove('show'),3200);
 }
 </script>
-<!-- ── END WAITER CALL WIDGET ────────────────────────────────────────── -->
- <!-- ── FUN ZONE · WRITE IN JAPANESE — plug & play ────────────────────── -->
-<!-- To remove: delete everything between these two comment lines          -->
 
-<!-- Google Fonts needed (add inside <head> if not already present) -->
-<!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&display=swap" rel="stylesheet"/> -->
-
-<style>
-.fz-fun-trigger{position:fixed;bottom:calc(24px + 60px + 80px);right:20px;z-index:399;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-.fz-funzone-btn{display:flex;align-items:center;gap:8px;background:rgba(14,10,6,0.92);border:1px solid rgba(184,151,58,0.3);border-radius:30px;padding:10px 16px;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 18px rgba(0,0,0,0.4)}
-.fz-funzone-btn:active{transform:scale(0.95)}
-.fz-funzone-label{font-size:12px;font-weight:500;letter-spacing:0.06em;color:#D4AE52;font-family:var(--ff-ui)}
-.fz-submenu{display:flex;flex-direction:column;gap:6px;align-items:flex-end;transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);transform-origin:bottom right}
-.fz-submenu.fz-hidden-menu{opacity:0;pointer-events:none;transform:scale(0.88) translateY(8px)}
-.fz-sub-btn{display:flex;align-items:center;gap:8px;background:rgba(14,10,6,0.92);border:1px solid rgba(240,232,213,0.1);border-radius:25px;padding:9px 14px;cursor:pointer;transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1)}
-.fz-sub-btn:active{transform:scale(0.93)}
-.fz-sub-label{font-size:11px;font-weight:500;letter-spacing:0.05em;color:rgba(240,232,213,0.8);font-family:var(--ff-ui)}
-.fz-overlay{position:fixed;inset:0;z-index:600;background:rgba(4,3,2,0.97);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:0 0 40px;transition:opacity 0.3s}
-.fz-overlay.fz-hidden{display:none}
-.fz-header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:calc(18px + env(safe-area-inset-top)) 22px 0;flex-shrink:0}
-.fz-title{font-family:var(--ff-en);font-size:26px;font-weight:400;letter-spacing:0.08em;color:#F0E8D5}
-.fz-title span{display:block;font-family:var(--ff-jp);font-size:11px;font-weight:200;letter-spacing:0.35em;color:rgba(122,46,30,0.8);margin-top:3px}
-.fz-close{width:38px;height:38px;border-radius:50%;background:rgba(240,232,213,0.07);border:1px solid rgba(240,232,213,0.1);color:rgba(240,232,213,0.6);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.fz-close:active{transform:scale(0.9)}
-.fz-body{width:100%;max-width:420px;padding:28px 22px 0;display:flex;flex-direction:column;gap:20px}
-.fz-input-wrap{display:flex;gap:10px}
-.fz-input{flex:1;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.14);border-radius:6px;padding:13px 16px;color:#F0E8D5;font-family:var(--ff-ui);font-size:15px;outline:none;transition:border-color 0.2s}
-.fz-input::placeholder{color:rgba(240,232,213,0.25)}
-.fz-input:focus{border-color:rgba(122,46,30,0.7)}
-.fz-go-btn{padding:13px 20px;background:linear-gradient(135deg,#C4513A,#7A2E1E);border:none;border-radius:6px;color:#F0E8D5;font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap}
-.fz-go-btn:active{transform:scale(0.95)}
-.fz-tabs{display:flex;gap:6px}
-.fz-tab{flex:1;padding:9px;background:rgba(240,232,213,0.05);border:1px solid rgba(240,232,213,0.1);border-radius:6px;color:rgba(240,232,213,0.45);font-size:12px;letter-spacing:0.08em;cursor:pointer;text-align:center;transition:all 0.18s;font-family:var(--ff-ui)}
-.fz-tab.active{background:rgba(122,46,30,0.25);border-color:rgba(122,46,30,0.55);color:#F0E8D5}
-.fz-result-area{min-height:200px;display:flex;flex-direction:column;gap:16px}
-.fz-chars-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.fz-char-card{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
-.fz-char-box{width:72px;height:72px;border-radius:8px;background:rgba(240,232,213,0.05);border:1px solid rgba(240,232,213,0.12);display:flex;align-items:center;justify-content:center;transition:border-color 0.2s}
-.fz-char-box.fz-active-char{border-color:rgba(122,46,30,0.7);background:rgba(122,46,30,0.12)}
-.fz-char-rom{font-size:11px;letter-spacing:0.08em;color:rgba(184,151,58,0.8);font-family:var(--ff-ui)}
-.fz-stroke-panel{background:rgba(240,232,213,0.04);border:1px solid rgba(240,232,213,0.08);border-radius:8px;padding:16px}
-.fz-stroke-title{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(122,46,30,0.75);margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:var(--ff-ui)}
-.fz-stroke-title::before{content:'';width:16px;height:1px;background:rgba(122,46,30,0.5)}
-.fz-big-canvas-wrap{display:flex;justify-content:center;margin-bottom:14px}
-.fz-big-canvas{border-radius:10px;background:rgba(8,6,4,0.9);border:1px solid rgba(240,232,213,0.08)}
-.fz-stroke-steps{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
-.fz-step-dot{width:28px;height:28px;border-radius:50%;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.1);display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(240,232,213,0.35);cursor:pointer;transition:all 0.15s;font-family:var(--ff-ui)}
-.fz-step-dot.fz-done{background:rgba(122,46,30,0.3);border-color:rgba(122,46,30,0.6);color:#F0E8D5}
-.fz-step-dot.fz-current{background:rgba(184,151,58,0.2);border-color:rgba(184,151,58,0.6);color:#D4AE52}
-.fz-anim-controls{display:flex;gap:8px;justify-content:center}
-.fz-ctrl-btn{padding:8px 18px;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.12);border-radius:5px;color:rgba(240,232,213,0.7);font-size:11px;letter-spacing:0.08em;cursor:pointer;transition:all 0.15s;font-family:var(--ff-ui)}
-.fz-ctrl-btn:active{transform:scale(0.95);background:rgba(122,46,30,0.25)}
-.fz-dl-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B8973A,#7A6020);border:none;border-radius:6px;color:#F0E8D5;font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.08em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1)}
-.fz-dl-btn:active{transform:scale(0.97)}
-.fz-empty{text-align:center;padding:40px 20px;color:rgba(240,232,213,0.2);font-size:13px;letter-spacing:0.08em;font-family:var(--ff-ui)}
-</style>
-
-<!-- Fun Zone FAB trigger -->
-<div class="fz-fun-trigger">
-  <div class="fz-submenu fz-hidden-menu" id="fzSubmenu">
-    <div class="fz-sub-btn" onclick="fzOpenJapanese()">
-      <span style="font-size:16px">✍️</span>
-      <span class="fz-sub-label">Write in Japanese</span>
-    </div>
-    <!-- Add more fun zone buttons here in future -->
-  </div>
-  <div class="fz-funzone-btn" onclick="fzToggle()">
-    <span style="font-size:18px">🎌</span>
-    <span class="fz-funzone-label">Fun Zone</span>
-  </div>
-</div>
-
-<!-- Full-screen Japanese writing panel -->
-<div class="fz-overlay fz-hidden" id="fzOverlay">
-  <div class="fz-header">
-    <div class="fz-title">
-      Write in Japanese
-      <span>あなたの名前を書こう</span>
-    </div>
-    <div class="fz-close" onclick="fzClose()">✕</div>
-  </div>
-  <div class="fz-body">
-    <div class="fz-input-wrap">
-      <input class="fz-input" id="fzNameInput" placeholder="Type your name…" maxlength="12" oninput="fzOnInput()"/>
-      <button class="fz-go-btn" onclick="fzConvert()">変換 Convert</button>
-    </div>
-    <div class="fz-tabs">
-      <div class="fz-tab active" id="fzTabHira" onclick="fzSwitchTab('hira')">ひらがな Hiragana</div>
-      <div class="fz-tab" id="fzTabKata" onclick="fzSwitchTab('kata')">カタカナ Katakana</div>
-    </div>
-    <div class="fz-result-area" id="fzResultArea">
-      <div class="fz-empty">Enter your name above ✦</div>
-    </div>
-  </div>
-</div>
-
-</script>
-<script>
-
-  // all your JS code here...
-
-  function openFunZone(){
-    const toast = document.getElementById("toast");
-
-    toast.textContent = "🎮 Welcome to Fun Zone!";
-    toast.classList.add("show");
-
-    setTimeout(()=>{
-      toast.classList.remove("show");
-    },2000);
-  }
-
-</script>
-<div class="hud-right">
-  <div class="hud-table">七番卓 · Table 07</div>
-
-  <!-- 🎮 Fun Zone Button -->
-  <button onclick="openFunZone()" style="padding:6px 10px;border-radius:6px;background:#7A2E1E;color:white;border:none;cursor:pointer;font-size:11px;">
-    🎮 Fun Zone
-  </button>
-
-  <div class="hud-cart-btn" onclick="openOrder()">🛍
 </body>
 </html>
