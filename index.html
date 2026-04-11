@@ -636,5 +636,89 @@ async function init(){
 init();
 document.addEventListener('contextmenu',e=>e.preventDefault());
 </script>
+<!-- ── WAITER CALL WIDGET — plug & play ──────────────────────────────── -->
+<!-- To remove: delete everything between these two comment lines         -->
+<style>
+  .wc-fab{position:fixed;bottom:calc(24px + 60px + 16px);right:20px;z-index:400;display:flex;flex-direction:column;align-items:flex-end;gap:10px;font-family:'DM Sans',sans-serif}
+  .wc-menu{display:flex;flex-direction:column;gap:8px;align-items:flex-end;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);transform-origin:bottom right}
+  .wc-menu.hidden{opacity:0;pointer-events:none;transform:scale(0.85) translateY(10px)}
+  .wc-option{display:flex;align-items:center;gap:10px;cursor:pointer;animation:wcSlideIn 0.2s ease both}
+  @keyframes wcSlideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+  .wc-option-label{background:rgba(8,6,4,0.88);border:1px solid rgba(240,232,213,0.12);border-radius:20px;padding:7px 14px;font-size:12px;color:#F0E8D5;letter-spacing:0.04em;white-space:nowrap;pointer-events:none}
+  .wc-option-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(240,232,213,0.15);background:rgba(14,10,6,0.9);flex-shrink:0;box-shadow:0 4px 18px rgba(0,0,0,0.45);transition:transform 0.15s cubic-bezier(0.34,1.56,0.64,1)}
+  .wc-option:active .wc-option-icon{transform:scale(0.88)}
+  .wc-trigger{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#7A2E1E,#A03D28);border:2px solid rgba(240,232,213,0.22);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 22px rgba(122,46,30,0.55),0 2px 8px rgba(0,0,0,0.5);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);position:relative;font-size:24px}
+  .wc-trigger:active{transform:scale(0.93)}
+  .wc-trigger.open{background:linear-gradient(135deg,#2C2C2A,#1a1816);box-shadow:0 4px 22px rgba(0,0,0,0.6)}
+  .wc-pulse{position:absolute;inset:-6px;border-radius:50%;border:1.5px solid rgba(160,61,40,0.4);animation:wcPulseRing 2s ease-in-out infinite}
+  @keyframes wcPulseRing{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0;transform:scale(1.22)}}
+  .wc-sent-toast{position:fixed;bottom:160px;right:20px;background:rgba(20,60,25,0.92);border:1px solid rgba(37,200,100,0.2);border-radius:8px;padding:10px 16px;font-size:12px;color:#8DC89A;font-family:'DM Sans',sans-serif;opacity:0;transform:translateY(8px);transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;z-index:500;max-width:220px;line-height:1.5}
+  .wc-sent-toast.show{opacity:1;transform:translateY(0)}
+  .wc-badge{position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:#C4513A;border:2px solid #080604;display:none;align-items:center;justify-content:center;font-size:8px;color:#F0E8D5;font-weight:600}
+  .wc-badge.show{display:flex}
+</style>
+
+<div class="wc-fab" id="wcFab">
+  <div class="wc-menu hidden" id="wcMenu">
+    <div class="wc-option" onclick="wcSend('waiter','🙋 Waiter Needed','Please send a waiter to Table 07')">
+      <div class="wc-option-label">Call Waiter</div>
+      <div class="wc-option-icon">🙋</div>
+    </div>
+    <div class="wc-option" onclick="wcSend('water','💧 Water Requested','Please bring water to Table 07')" style="animation-delay:0.04s">
+      <div class="wc-option-label">Request Water</div>
+      <div class="wc-option-icon">💧</div>
+    </div>
+    <div class="wc-option" onclick="wcSend('bill','🧾 Bill Requested','Please bring the bill for Table 07')" style="animation-delay:0.08s">
+      <div class="wc-option-label">Ask for Bill</div>
+      <div class="wc-option-icon">🧾</div>
+    </div>
+    <div class="wc-option" onclick="wcSend('tissues','🧻 Tissues Needed','Please bring tissues to Table 07')" style="animation-delay:0.12s">
+      <div class="wc-option-label">Tissues</div>
+      <div class="wc-option-icon">🧻</div>
+    </div>
+    <div class="wc-option" onclick="wcSend('extra_chairs','🪑 Extra Chair Needed','Please bring extra chair(s) to Table 07')" style="animation-delay:0.16s">
+      <div class="wc-option-label">Extra Chair</div>
+      <div class="wc-option-icon">🪑</div>
+    </div>
+  </div>
+  <div class="wc-trigger" id="wcTrigger" onclick="wcToggle()">
+    <div class="wc-pulse" id="wcPulse"></div>
+    <span id="wcIcon">🔔</span>
+    <div class="wc-badge" id="wcBadge"></div>
+  </div>
+</div>
+<div class="wc-sent-toast" id="wcToast"></div>
+
+<script>
+const WC_KITCHEN_WA = '917019743880'; // ← change this per deployment
+const WC_TABLE = '07';                // ← change this per table
+let wcOpen=false, wcCount=0, wcCooldown={};
+
+function wcToggle(){
+  wcOpen=!wcOpen;
+  document.getElementById('wcMenu').classList.toggle('hidden',!wcOpen);
+  document.getElementById('wcTrigger').classList.toggle('open',wcOpen);
+  document.getElementById('wcIcon').textContent=wcOpen?'✕':'🔔';
+  document.getElementById('wcPulse').style.display=wcOpen?'none':'block';
+}
+function wcSend(type,title,body){
+  const now=Date.now();
+  if(wcCooldown[type]&&(now-wcCooldown[type])<60000){
+    wcShowToast('⏳ Already sent — staff notified');return;
+  }
+  wcCooldown[type]=now;
+  const time=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const msg=`🔔 *STAFF REQUEST*\n━━━━━━━━━━━━━━━\n*${title}*\n*Table :* ${WC_TABLE}\n*Time  :* ${time}\n━━━━━━━━━━━━━━━\n${body}\n_Sakura AR Menu · さくら_`;
+  window.open('https://wa.me/'+WC_KITCHEN_WA+'?text='+encodeURIComponent(msg),'_blank');
+  wcShowToast('✓ '+title+'\nStaff has been notified 📲');
+  wcToggle();
+}
+function wcShowToast(msg){
+  const t=document.getElementById('wcToast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+</script>
+<!-- ── END WAITER CALL WIDGET ────────────────────────────────────────── -->
 </body>
 </html>
