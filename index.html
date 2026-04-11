@@ -720,5 +720,214 @@ function wcShowToast(msg){
 }
 </script>
 <!-- ── END WAITER CALL WIDGET ────────────────────────────────────────── -->
+ <!-- ── FUN ZONE · WRITE IN JAPANESE — plug & play ────────────────────── -->
+<!-- To remove: delete everything between these two comment lines          -->
+
+<!-- Google Fonts needed (add inside <head> if not already present) -->
+<!-- <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&display=swap" rel="stylesheet"/> -->
+
+<style>
+.fz-fun-trigger{position:fixed;bottom:calc(24px + 60px + 80px);right:20px;z-index:399;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.fz-funzone-btn{display:flex;align-items:center;gap:8px;background:rgba(14,10,6,0.92);border:1px solid rgba(184,151,58,0.3);border-radius:30px;padding:10px 16px;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 18px rgba(0,0,0,0.4)}
+.fz-funzone-btn:active{transform:scale(0.95)}
+.fz-funzone-label{font-size:12px;font-weight:500;letter-spacing:0.06em;color:#D4AE52;font-family:var(--ff-ui)}
+.fz-submenu{display:flex;flex-direction:column;gap:6px;align-items:flex-end;transition:all 0.22s cubic-bezier(0.34,1.56,0.64,1);transform-origin:bottom right}
+.fz-submenu.fz-hidden-menu{opacity:0;pointer-events:none;transform:scale(0.88) translateY(8px)}
+.fz-sub-btn{display:flex;align-items:center;gap:8px;background:rgba(14,10,6,0.92);border:1px solid rgba(240,232,213,0.1);border-radius:25px;padding:9px 14px;cursor:pointer;transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1)}
+.fz-sub-btn:active{transform:scale(0.93)}
+.fz-sub-label{font-size:11px;font-weight:500;letter-spacing:0.05em;color:rgba(240,232,213,0.8);font-family:var(--ff-ui)}
+.fz-overlay{position:fixed;inset:0;z-index:600;background:rgba(4,3,2,0.97);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:0 0 40px;transition:opacity 0.3s}
+.fz-overlay.fz-hidden{display:none}
+.fz-header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:calc(18px + env(safe-area-inset-top)) 22px 0;flex-shrink:0}
+.fz-title{font-family:var(--ff-en);font-size:26px;font-weight:400;letter-spacing:0.08em;color:#F0E8D5}
+.fz-title span{display:block;font-family:var(--ff-jp);font-size:11px;font-weight:200;letter-spacing:0.35em;color:rgba(122,46,30,0.8);margin-top:3px}
+.fz-close{width:38px;height:38px;border-radius:50%;background:rgba(240,232,213,0.07);border:1px solid rgba(240,232,213,0.1);color:rgba(240,232,213,0.6);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.fz-close:active{transform:scale(0.9)}
+.fz-body{width:100%;max-width:420px;padding:28px 22px 0;display:flex;flex-direction:column;gap:20px}
+.fz-input-wrap{display:flex;gap:10px}
+.fz-input{flex:1;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.14);border-radius:6px;padding:13px 16px;color:#F0E8D5;font-family:var(--ff-ui);font-size:15px;outline:none;transition:border-color 0.2s}
+.fz-input::placeholder{color:rgba(240,232,213,0.25)}
+.fz-input:focus{border-color:rgba(122,46,30,0.7)}
+.fz-go-btn{padding:13px 20px;background:linear-gradient(135deg,#C4513A,#7A2E1E);border:none;border-radius:6px;color:#F0E8D5;font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap}
+.fz-go-btn:active{transform:scale(0.95)}
+.fz-tabs{display:flex;gap:6px}
+.fz-tab{flex:1;padding:9px;background:rgba(240,232,213,0.05);border:1px solid rgba(240,232,213,0.1);border-radius:6px;color:rgba(240,232,213,0.45);font-size:12px;letter-spacing:0.08em;cursor:pointer;text-align:center;transition:all 0.18s;font-family:var(--ff-ui)}
+.fz-tab.active{background:rgba(122,46,30,0.25);border-color:rgba(122,46,30,0.55);color:#F0E8D5}
+.fz-result-area{min-height:200px;display:flex;flex-direction:column;gap:16px}
+.fz-chars-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.fz-char-card{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.fz-char-box{width:72px;height:72px;border-radius:8px;background:rgba(240,232,213,0.05);border:1px solid rgba(240,232,213,0.12);display:flex;align-items:center;justify-content:center;transition:border-color 0.2s}
+.fz-char-box.fz-active-char{border-color:rgba(122,46,30,0.7);background:rgba(122,46,30,0.12)}
+.fz-char-rom{font-size:11px;letter-spacing:0.08em;color:rgba(184,151,58,0.8);font-family:var(--ff-ui)}
+.fz-stroke-panel{background:rgba(240,232,213,0.04);border:1px solid rgba(240,232,213,0.08);border-radius:8px;padding:16px}
+.fz-stroke-title{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(122,46,30,0.75);margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:var(--ff-ui)}
+.fz-stroke-title::before{content:'';width:16px;height:1px;background:rgba(122,46,30,0.5)}
+.fz-big-canvas-wrap{display:flex;justify-content:center;margin-bottom:14px}
+.fz-big-canvas{border-radius:10px;background:rgba(8,6,4,0.9);border:1px solid rgba(240,232,213,0.08)}
+.fz-stroke-steps{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.fz-step-dot{width:28px;height:28px;border-radius:50%;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.1);display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(240,232,213,0.35);cursor:pointer;transition:all 0.15s;font-family:var(--ff-ui)}
+.fz-step-dot.fz-done{background:rgba(122,46,30,0.3);border-color:rgba(122,46,30,0.6);color:#F0E8D5}
+.fz-step-dot.fz-current{background:rgba(184,151,58,0.2);border-color:rgba(184,151,58,0.6);color:#D4AE52}
+.fz-anim-controls{display:flex;gap:8px;justify-content:center}
+.fz-ctrl-btn{padding:8px 18px;background:rgba(240,232,213,0.06);border:1px solid rgba(240,232,213,0.12);border-radius:5px;color:rgba(240,232,213,0.7);font-size:11px;letter-spacing:0.08em;cursor:pointer;transition:all 0.15s;font-family:var(--ff-ui)}
+.fz-ctrl-btn:active{transform:scale(0.95);background:rgba(122,46,30,0.25)}
+.fz-dl-btn{width:100%;padding:14px;background:linear-gradient(135deg,#B8973A,#7A6020);border:none;border-radius:6px;color:#F0E8D5;font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.08em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1)}
+.fz-dl-btn:active{transform:scale(0.97)}
+.fz-empty{text-align:center;padding:40px 20px;color:rgba(240,232,213,0.2);font-size:13px;letter-spacing:0.08em;font-family:var(--ff-ui)}
+</style>
+
+<!-- Fun Zone FAB trigger -->
+<div class="fz-fun-trigger">
+  <div class="fz-submenu fz-hidden-menu" id="fzSubmenu">
+    <div class="fz-sub-btn" onclick="fzOpenJapanese()">
+      <span style="font-size:16px">✍️</span>
+      <span class="fz-sub-label">Write in Japanese</span>
+    </div>
+    <!-- Add more fun zone buttons here in future -->
+  </div>
+  <div class="fz-funzone-btn" onclick="fzToggle()">
+    <span style="font-size:18px">🎌</span>
+    <span class="fz-funzone-label">Fun Zone</span>
+  </div>
+</div>
+
+<!-- Full-screen Japanese writing panel -->
+<div class="fz-overlay fz-hidden" id="fzOverlay">
+  <div class="fz-header">
+    <div class="fz-title">
+      Write in Japanese
+      <span>あなたの名前を書こう</span>
+    </div>
+    <div class="fz-close" onclick="fzClose()">✕</div>
+  </div>
+  <div class="fz-body">
+    <div class="fz-input-wrap">
+      <input class="fz-input" id="fzNameInput" placeholder="Type your name…" maxlength="12" oninput="fzOnInput()"/>
+      <button class="fz-go-btn" onclick="fzConvert()">変換 Convert</button>
+    </div>
+    <div class="fz-tabs">
+      <div class="fz-tab active" id="fzTabHira" onclick="fzSwitchTab('hira')">ひらがな Hiragana</div>
+      <div class="fz-tab" id="fzTabKata" onclick="fzSwitchTab('kata')">カタカナ Katakana</div>
+    </div>
+    <div class="fz-result-area" id="fzResultArea">
+      <div class="fz-empty">Enter your name above ✦</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── FUN ZONE CONFIG ─────────────────────
+const FZ_TABLE = TABLE_NUMBER;   // reuses your existing variable
+// ────────────────────────────────────────
+
+const FZ_HIRA={a:'あ',i:'い',u:'う',e:'え',o:'お',ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',sa:'さ',shi:'し',si:'し',su:'す',se:'せ',so:'そ',ta:'た',chi:'ち',ti:'ち',tsu:'つ',tu:'つ',te:'て',to:'と',na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',ha:'は',hi:'ひ',fu:'ふ',hu:'ふ',he:'へ',ho:'ほ',ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',ya:'や',yu:'ゆ',yo:'よ',ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',wa:'わ',wo:'を',n:'ん',ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',za:'ざ',ji:'じ',zi:'じ',zu:'ず',ze:'ぜ',zo:'ぞ',da:'だ',de:'で',do:'ど',ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',pa:'ぱ',pi:'ぴ',pu:'ぷ',pe:'ぺ',po:'ぽ',sha:'しゃ',shu:'しゅ',sho:'しょ',cha:'ちゃ',chu:'ちゅ',cho:'ちょ',kya:'きゃ',kyu:'きゅ',kyo:'きょ',nya:'にゃ',nyu:'にゅ',nyo:'にょ',rya:'りゃ',ryu:'りゅ',ryo:'りょ'};
+const FZ_KATA={a:'ア',i:'イ',u:'ウ',e:'エ',o:'オ',ka:'カ',ki:'キ',ku:'ク',ke:'ケ',ko:'コ',sa:'サ',shi:'シ',si:'シ',su:'ス',se:'セ',so:'ソ',ta:'タ',chi:'チ',ti:'チ',tsu:'ツ',tu:'ツ',te:'テ',to:'ト',na:'ナ',ni:'ニ',nu:'ヌ',ne:'ネ',no:'ノ',ha:'ハ',hi:'ヒ',fu:'フ',hu:'フ',he:'ヘ',ho:'ホ',ma:'マ',mi:'ミ',mu:'ム',me:'メ',mo:'モ',ya:'ヤ',yu:'ユ',yo:'ヨ',ra:'ラ',ri:'リ',ru:'ル',re:'レ',ro:'ロ',wa:'ワ',wo:'ヲ',n:'ン',ga:'ガ',gi:'ギ',gu:'グ',ge:'ゲ',go:'ゴ',za:'ザ',ji:'ジ',zi:'ジ',zu:'ズ',ze:'ゼ',zo:'ゾ',da:'ダ',de:'デ',do:'ド',ba:'バ',bi:'ビ',bu:'ブ',be:'ベ',bo:'ボ',pa:'パ',pi:'ピ',pu:'プ',pe:'ペ',po:'ポ',sha:'シャ',shu:'シュ',sho:'ショ',cha:'チャ',chu:'チュ',cho:'チョ',kya:'キャ',kyu:'キュ',kyo:'キョ',rya:'リャ',ryu:'リュ',ryo:'リョ',fa:'ファ',fi:'フィ',fe:'フェ',fo:'フォ',va:'ヴァ',vi:'ヴィ',ve:'ヴェ',vo:'ヴォ'};
+const FZ_PRESET={arjun:{h:'あるじゅん',k:'アルジュン'},priya:{h:'ぷりや',k:'プリヤ'},rahul:{h:'らふる',k:'ラフル'},anjali:{h:'あんじゃり',k:'アンジャリ'},vikram:{h:'びくらむ',k:'ビクラム'},sneha:{h:'すねは',k:'スネハ'},rohan:{h:'ろはん',k:'ロハン'},deepa:{h:'でぃーぱ',k:'ディーパ'},arun:{h:'あるん',k:'アルン'},kavya:{h:'かぶや',k:'カブヤ'},raj:{h:'らじ',k:'ラジ'},nisha:{h:'にしゃ',k:'ニシャ'},amit:{h:'あみと',k:'アミト'},pooja:{h:'ぷーじゃ',k:'プージャ'},suresh:{h:'すれし',k:'スレシ'},krishna:{h:'くりしゅな',k:'クリシュナ'},meera:{h:'みーら',k:'ミーラ'},ravi:{h:'らび',k:'ラビ'},divya:{h:'でぃびや',k:'ディビヤ'},lakshmi:{h:'らくしゅみ',k:'ラクシュミ'},haruto:{h:'はると',k:'ハルト'},sakura:{h:'さくら',k:'サクラ'},yuki:{h:'ゆき',k:'ユキ'},ken:{h:'けん',k:'ケン'},akira:{h:'あきら',k:'アキラ'}};
+const FZ_STROKES={あ:[[[20,18],[22,30],[16,42]],[[28,12],[34,12]],[[30,14],[26,28],[18,38],[28,46],[40,40],[42,30]]],い:[[[18,16],[18,36],[22,44]],[[36,14],[36,44]]],う:[[[28,12],[28,18]],[[16,24],[28,22],[40,24],[40,34],[30,44],[20,46]]],え:[[[28,14],[28,20]],[[14,26],[42,26]],[[28,26],[22,38],[26,46],[38,44]]],お:[[[28,12],[28,22]],[[14,22],[42,22]],[[28,22],[20,34],[24,44],[36,42],[40,32]]],か:[[[20,14],[20,44]],[[20,28],[38,20]],[[34,22],[38,44]]],き:[[[14,20],[42,20]],[[14,30],[42,30]],[[28,14],[28,34]],[[28,34],[24,42],[28,48],[36,44]]],く:[[[36,16],[22,28],[36,44]]],け:[[[20,14],[20,44]],[[20,24],[38,20]],[[36,20],[36,44]]],こ:[[[14,20],[42,20]],[[14,40],[42,40]]],さ:[[[14,20],[42,20]],[[28,14],[28,28]],[[28,28],[20,40],[24,48],[36,44],[40,34]]],し:[[[28,14],[28,40],[22,46],[16,42]]],す:[[[28,14],[28,22]],[[14,22],[42,22]],[[28,22],[34,32],[28,44],[18,48]]],せ:[[[20,20],[20,44]],[[14,28],[42,28],[42,14]],[[30,28],[30,48]]],そ:[[[16,16],[40,16],[30,22]],[[30,22],[16,34],[22,44],[38,44]]],た:[[[14,22],[42,22]],[[28,14],[28,44]],[[28,30],[36,24]],[[36,24],[40,44]]],ち:[[[14,20],[42,20]],[[28,20],[28,36],[18,44],[16,38]]],つ:[[[16,24],[32,18],[40,28],[36,44],[24,48]]],て:[[[14,24],[42,24]],[[28,14],[26,34],[28,44],[38,42]]],と:[[[24,14],[24,30]],[[14,28],[30,28],[38,36],[34,46],[22,48]]],な:[[[18,20],[36,20]],[[28,14],[28,44]],[[14,34],[22,30],[28,34]],[[28,34],[24,44],[28,48],[40,44]]],に:[[[18,18],[18,44]],[[18,30],[36,30]],[[36,14],[36,44]]],ぬ:[[[20,14],[20,28],[28,28]],[[28,14],[28,44]],[[28,28],[18,40],[22,48],[36,42],[40,32]]],ね:[[[18,14],[18,44]],[[18,24],[38,20],[38,40],[28,48],[18,44]]],の:[[[28,14],[36,24],[36,36],[26,46],[16,40],[16,28],[28,14]]],は:[[[18,14],[18,44]],[[18,28],[36,22],[36,44]],[[36,32],[28,44],[30,48],[40,44]]],ひ:[[[18,18],[28,18],[36,24],[36,36],[28,44],[18,40]]],ふ:[[[28,14],[28,20]],[[14,22],[42,22]],[[18,28],[22,36],[28,44],[34,36],[38,28]]],へ:[[[14,30],[28,20],[42,30]]],ほ:[[[18,14],[18,44]],[[14,26],[42,26]],[[30,26],[30,44]],[[30,36],[24,46],[28,50],[38,46]]],ま:[[[14,22],[42,22]],[[14,34],[42,34]],[[28,14],[28,50]]],み:[[[16,16],[20,28],[18,40],[24,46],[30,44]],[[34,14],[34,38],[28,46],[20,48]]],む:[[[14,20],[38,20],[38,32],[28,40]],[[28,40],[18,46],[20,50],[30,50],[42,44]]],め:[[[16,20],[22,20],[28,26],[28,36],[18,44]],[[34,16],[34,36],[28,44]]],も:[[[14,24],[42,24]],[[14,36],[42,36]],[[28,14],[26,44]]],や:[[[16,22],[28,18],[36,24],[34,44]],[[14,36],[34,36]]],ゆ:[[[16,20],[16,44]],[[16,30],[38,24],[40,44]],[[24,44],[40,44]]],よ:[[[14,22],[40,22]],[[14,36],[40,36]],[[28,14],[26,44]]],ら:[[[14,20],[40,20]],[[28,20],[26,34],[20,44],[26,48],[38,44],[40,36]]],り:[[[20,14],[20,36],[24,44]],[[36,14],[36,44]]],る:[[[28,14],[36,22],[34,34],[22,40],[24,48],[36,46],[42,38],[42,28]]],れ:[[[18,14],[18,44]],[[18,24],[38,20],[36,40],[28,48],[18,44]]],ろ:[[[14,20],[40,20],[38,40],[26,48],[14,44]]],わ:[[[18,14],[18,44]],[[18,26],[36,20],[38,36],[30,44],[20,46]]],を:[[[14,20],[40,20]],[[14,30],[40,30]],[[28,14],[22,38],[28,48],[38,42]]],ん:[[[18,20],[22,30],[18,38],[22,44],[34,44],[40,36],[38,28]]],ア:[[[14,22],[42,22]],[[28,14],[28,50]]],イ:[[[18,16],[28,40]],[[36,14],[28,40],[26,50]]],ウ:[[[28,12],[28,18]],[[14,22],[42,22]],[[28,22],[28,50]]],エ:[[[14,22],[42,22]],[[28,22],[28,40]],[[14,40],[42,40]]],オ:[[[14,22],[42,22]],[[28,14],[28,50]],[[28,36],[38,50]]],カ:[[[14,22],[42,22]],[[30,14],[28,50]]],キ:[[[14,20],[42,20]],[[14,32],[42,32]],[[28,14],[28,50]]],ク:[[[28,14],[36,22],[22,40]],[[22,40],[16,46]]],ケ:[[[20,14],[20,44]],[[20,26],[38,20]],[[38,20],[38,50]]],コ:[[[14,18],[42,18],[42,44]],[[14,44],[14,18]]],サ:[[[14,22],[42,22]],[[28,14],[28,40]],[[28,40],[18,48]]],シ:[[[16,22],[20,26]],[[16,32],[20,36]],[[24,42],[38,22]]],ス:[[[14,22],[42,22]],[[28,22],[34,34],[26,46],[18,48]]],セ:[[[20,22],[20,44]],[[14,30],[42,30],[42,14]],[[30,30],[30,50]]],ソ:[[[18,18],[22,22]],[[30,14],[26,42],[38,34]]],タ:[[[14,22],[42,22]],[[28,14],[26,34],[32,50]]],チ:[[[14,22],[42,22]],[[28,14],[26,34],[32,50]]],ツ:[[[18,20],[22,26]],[[28,18],[32,26]],[[38,16],[30,42],[20,48]]],テ:[[[14,22],[42,22]],[[28,14],[28,42]],[[18,42],[38,42]]],ト:[[[24,14],[24,50]],[[24,30],[38,42]]],ナ:[[[14,26],[42,26]],[[28,14],[28,50]]],ニ:[[[16,22],[40,22]],[[12,42],[44,42]]],ヌ:[[[14,22],[42,22]],[[28,14],[20,38],[32,46],[42,36]]],ネ:[[[28,14],[28,22]],[[14,22],[42,22]],[[28,22],[20,38],[28,50],[36,38]]],ノ:[[[36,14],[18,50]]],ハ:[[[20,18],[22,50]],[[38,14],[32,50]]],ヒ:[[[18,14],[18,44]],[[18,28],[36,28]],[[36,14],[36,44]]],フ:[[[14,18],[42,18],[28,50]]],ヘ:[[[14,32],[28,20],[42,32]]],ホ:[[[28,14],[28,50]],[[14,28],[42,28]],[[28,40],[20,50]],[[28,40],[36,50]]],マ:[[[14,20],[42,20],[28,50]]],ミ:[[[16,20],[36,20]],[[14,30],[38,30]],[[16,40],[40,40]]],ム:[[[18,14],[18,32],[28,50],[40,28]]],メ:[[[14,24],[42,24]],[[28,14],[20,42],[34,36]]],モ:[[[14,22],[42,22]],[[14,34],[42,34]],[[28,14],[28,50]]],ヤ:[[[16,26],[28,20],[40,26]],[[28,20],[28,50]]],ユ:[[[16,24],[40,24],[40,42]],[[16,42],[40,42]]],ヨ:[[[14,18],[40,18],[40,30]],[[14,30],[40,30],[40,44]],[[14,44],[40,44]]],ラ:[[[14,20],[42,20]],[[28,20],[20,50]]],リ:[[[20,14],[22,42],[28,50]],[[36,14],[36,50]]],ル:[[[20,14],[20,38],[28,50]],[[38,14],[28,50]]],レ:[[[20,14],[20,44],[38,36]]],ロ:[[[14,18],[40,18],[40,44],[14,44],[14,18]]],ワ:[[[14,18],[42,18]],[[14,18],[14,44]],[[42,18],[36,44]]],ヲ:[[[14,20],[42,20]],[[14,30],[42,30]],[[28,14],[22,50]]],ン:[[[18,20],[22,24]],[[36,16],[28,50]]]};
+
+let fzTab='hira',fzMenuOpen=false,fzCurrentChars=[],fzSelectedIdx=0,fzAnimTimer=null;
+
+function fzToggle(){fzMenuOpen=!fzMenuOpen;document.getElementById('fzSubmenu').classList.toggle('fz-hidden-menu',!fzMenuOpen);}
+function fzOpenJapanese(){fzMenuOpen=false;document.getElementById('fzSubmenu').classList.add('fz-hidden-menu');document.getElementById('fzOverlay').classList.remove('fz-hidden');setTimeout(()=>document.getElementById('fzNameInput').focus(),100);}
+function fzClose(){document.getElementById('fzOverlay').classList.add('fz-hidden');clearInterval(fzAnimTimer);}
+function fzOnInput(){const v=document.getElementById('fzNameInput').value.trim();if(!v)document.getElementById('fzResultArea').innerHTML='<div class="fz-empty">Enter your name above ✦</div>';}
+function fzSwitchTab(t){fzTab=t;document.getElementById('fzTabHira').classList.toggle('active',t==='hira');document.getElementById('fzTabKata').classList.toggle('active',t==='kata');if(fzCurrentChars.length)fzRender();}
+
+function fzRomanToKana(name){
+  const lower=name.toLowerCase().replace(/[^a-z]/g,'');
+  const preset=FZ_PRESET[lower];
+  if(preset) return [...(fzTab==='hira'?preset.h:preset.k)];
+  const map=fzTab==='hira'?FZ_HIRA:FZ_KATA;
+  let result=[],i=0;
+  while(i<lower.length){let matched=false;for(const len of[3,2,1]){const chunk=lower.slice(i,i+len);if(map[chunk]){result.push(map[chunk]);i+=len;matched=true;break;}}if(!matched){result.push(lower[i]);i++;}}
+  return result;
+}
+function fzConvert(){const name=document.getElementById('fzNameInput').value.trim();if(!name)return;fzCurrentChars=fzRomanToKana(name);fzSelectedIdx=0;fzRender();}
+
+function fzRender(){
+  const area=document.getElementById('fzResultArea');
+  const charsHtml=fzCurrentChars.map((ch,i)=>`<div class="fz-char-card" onclick="fzSelectChar(${i})"><div class="fz-char-box ${i===fzSelectedIdx?'fz-active-char':''}" id="fzCharBox_${i}"><svg width="56" height="56" viewBox="0 0 56 56"><text x="28" y="42" text-anchor="middle" font-size="38" fill="#F0E8D5" font-family="'Noto Serif JP',serif" opacity="${i===fzSelectedIdx?'1':'0.5'}">${ch}</text></svg></div><div class="fz-char-rom">${ch}</div></div>`).join('');
+  const sel=fzCurrentChars[fzSelectedIdx]||'';
+  const strokes=FZ_STROKES[sel]||[[[20,20],[40,20]],[[30,20],[30,40]],[[20,40],[40,40]]];
+  const stepDots=strokes.map((_,si)=>`<div class="fz-step-dot" id="fzDot_${si}" onclick="fzJumpStroke(${si})">${si+1}</div>`).join('');
+  area.innerHTML=`<div class="fz-chars-row">${charsHtml}</div><div class="fz-stroke-panel"><div class="fz-stroke-title">Stroke by stroke · ${sel}</div><div class="fz-big-canvas-wrap"><canvas class="fz-big-canvas" id="fzBigCanvas" width="160" height="160"></canvas></div><div class="fz-stroke-steps">${stepDots}</div><div class="fz-anim-controls"><button class="fz-ctrl-btn" onclick="fzPlayAnim()">▶ Play</button><button class="fz-ctrl-btn" onclick="fzResetAnim()">↺ Reset</button></div></div><button class="fz-dl-btn" onclick="fzDownloadWallpaper()">⬇ Save as Wallpaper</button>`;
+  fzDrawStroke(0);
+}
+function fzSelectChar(i){fzSelectedIdx=i;clearInterval(fzAnimTimer);fzRender();}
+
+function fzDrawStroke(upTo){
+  const canvas=document.getElementById('fzBigCanvas');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const sel=fzCurrentChars[fzSelectedIdx]||'';
+  const strokes=FZ_STROKES[sel]||[[[20,20],[40,20]],[[30,20],[30,40]],[[20,40],[40,40]]];
+  const scale=160/56;
+  ctx.clearRect(0,0,160,160);
+  ctx.fillStyle='rgba(8,6,4,0.95)';ctx.fillRect(0,0,160,160);
+  ctx.strokeStyle='rgba(240,232,213,0.06)';ctx.lineWidth=0.5;
+  ctx.beginPath();ctx.moveTo(80,0);ctx.lineTo(80,160);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,80);ctx.lineTo(160,80);ctx.stroke();
+  ctx.strokeStyle='rgba(240,232,213,0.04)';ctx.strokeRect(16,16,128,128);
+  strokes.forEach((pts,si)=>{
+    if(si>upTo)return;
+    ctx.beginPath();
+    ctx.strokeStyle=si===upTo?'#C4513A':'rgba(240,232,213,0.5)';
+    ctx.lineWidth=si===upTo?3.5:2.5;ctx.lineCap='round';ctx.lineJoin='round';
+    pts.forEach(([x,y],pi)=>{pi===0?ctx.moveTo(x*scale,y*scale):ctx.lineTo(x*scale,y*scale);});
+    ctx.stroke();
+    if(si===upTo){const last=pts[pts.length-1];ctx.beginPath();ctx.arc(last[0]*scale,last[1]*scale,5,0,Math.PI*2);ctx.fillStyle='#D4AE52';ctx.fill();}
+  });
+  document.querySelectorAll('[id^="fzDot_"]').forEach((d,i)=>{d.classList.remove('fz-done','fz-current');if(i<upTo)d.classList.add('fz-done');else if(i===upTo)d.classList.add('fz-current');});
+}
+function fzPlayAnim(){
+  clearInterval(fzAnimTimer);
+  const sel=fzCurrentChars[fzSelectedIdx]||'';
+  const total=(FZ_STROKES[sel]||[[[0,0],[1,1]]]).length;
+  let step=0;fzDrawStroke(0);
+  fzAnimTimer=setInterval(()=>{step++;if(step>=total){clearInterval(fzAnimTimer);return;}fzDrawStroke(step);},700);
+}
+function fzResetAnim(){clearInterval(fzAnimTimer);fzDrawStroke(0);}
+function fzJumpStroke(i){clearInterval(fzAnimTimer);fzDrawStroke(i);}
+
+function fzDownloadWallpaper(){
+  const name=document.getElementById('fzNameInput').value.trim()||'Name';
+  const wc=document.createElement('canvas');wc.width=1080;wc.height=1920;
+  const ctx=wc.getContext('2d');
+  ctx.fillStyle='#080604';ctx.fillRect(0,0,1080,1920);
+  ctx.strokeStyle='rgba(122,46,30,0.12)';ctx.lineWidth=1;
+  for(let y=0;y<1920;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1080,y);ctx.stroke();}
+  for(let x=0;x<1080;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,1920);ctx.stroke();}
+  ctx.strokeStyle='rgba(122,46,30,0.5)';ctx.lineWidth=3;ctx.strokeRect(40,40,1000,1840);
+  ctx.fillStyle='rgba(184,151,58,0.75)';ctx.font='300 28px serif';ctx.textAlign='center';
+  ctx.fillText('さくら · Sakura Dining · Bangalore',540,110);
+  ctx.fillStyle='rgba(240,232,213,0.15)';ctx.font='300 22px serif';
+  ctx.fillText('My name in Japanese · 私の名前',540,170);
+  ctx.strokeStyle='rgba(122,46,30,0.35)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(140,200);ctx.lineTo(940,200);ctx.stroke();
+  ctx.fillStyle='#F0E8D5';ctx.font='bold 90px serif';ctx.textAlign='center';
+  ctx.fillText(name,540,330);
+  const chars=fzCurrentChars;
+  const charSize=160,gap=24,total=chars.length*(charSize+gap)-gap;
+  let sx=Math.max(60,(1080-total)/2);
+  ctx.font=charSize+'px serif';ctx.textAlign='left';
+  chars.forEach(ch=>{
+    ctx.fillStyle='rgba(122,46,30,0.1)';
+    ctx.beginPath();if(ctx.roundRect)ctx.roundRect(sx-12,380,charSize+24,charSize+24,14);else ctx.rect(sx-12,380,charSize+24,charSize+24);
+    ctx.fill();ctx.strokeStyle='rgba(122,46,30,0.28)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='#F0E8D5';ctx.fillText(ch,sx,380+charSize-8);
+    sx+=charSize+gap;
+  });
+  const script=fzTab==='hira'?'ひらがな — Hiragana':'カタカナ — Katakana';
+  ctx.font='30px serif';ctx.textAlign='center';ctx.fillStyle='rgba(184,151,58,0.6)';
+  ctx.fillText(script,540,380+charSize+60);
+  ctx.strokeStyle='rgba(122,46,30,0.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(140,1780);ctx.lineTo(940,1780);ctx.stroke();
+  ctx.font='24px serif';ctx.fillStyle='rgba(240,232,213,0.25)';ctx.textAlign='center';
+  ctx.fillText('Sakura AR Menu · さくら · Table '+FZ_TABLE,540,1830);
+  const link=document.createElement('a');
+  link.download=name+'_in_japanese_sakura.png';
+  link.href=wc.toDataURL('image/png');link.click();
+}
+</script>
+<!-- ── END FUN ZONE · WRITE IN JAPANESE ──────────────────────────────── -->
 </body>
 </html>
