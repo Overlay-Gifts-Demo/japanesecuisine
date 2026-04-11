@@ -199,8 +199,14 @@ model-viewer{width:100%;height:100%;background:transparent;--poster-color:transp
       <div class="hud-row1">
         <div class="hud-brand">Sakura<span>さくら · Dining</span></div>
         <div class="hud-right">
-          <div class="hud-table">七番卓 · Table 07</div>
-          <div class="hud-cart-btn" onclick="openOrder()">🛍<div class="hud-cart-count" id="hudCartCount">0</div></div>
+  <div class="hud-table">七番卓 · Table 07</div>
+
+  <!-- 🎮 Fun Zone -->
+  <button onclick="openFunZone()" style="padding:6px 10px;border-radius:6px;background:#7A2E1E;color:white;border:none;cursor:pointer;font-size:11px;">
+    🎮 Fun Zone
+  </button>
+
+  <div class="hud-cart-btn" onclick="openOrder()">🛍<div class="hud-cart-count" id="hudCartCount">0</div></div>
         </div>
       </div>
       <div class="lang-switcher">
@@ -815,119 +821,31 @@ function wcShowToast(msg){
   </div>
 </div>
 
-<script>
-// ── FUN ZONE CONFIG ─────────────────────
-const FZ_TABLE = TABLE_NUMBER;   // reuses your existing variable
-// ────────────────────────────────────────
-
-const FZ_HIRA={a:'あ',i:'い',u:'う',e:'え',o:'お',ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',sa:'さ',shi:'し',si:'し',su:'す',se:'せ',so:'そ',ta:'た',chi:'ち',ti:'ち',tsu:'つ',tu:'つ',te:'て',to:'と',na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',ha:'は',hi:'ひ',fu:'ふ',hu:'ふ',he:'へ',ho:'ほ',ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',ya:'や',yu:'ゆ',yo:'よ',ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',wa:'わ',wo:'を',n:'ん',ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',za:'ざ',ji:'じ',zi:'じ',zu:'ず',ze:'ぜ',zo:'ぞ',da:'だ',de:'で',do:'ど',ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',pa:'ぱ',pi:'ぴ',pu:'ぷ',pe:'ぺ',po:'ぽ',sha:'しゃ',shu:'しゅ',sho:'しょ',cha:'ちゃ',chu:'ちゅ',cho:'ちょ',kya:'きゃ',kyu:'きゅ',kyo:'きょ',nya:'にゃ',nyu:'にゅ',nyo:'にょ',rya:'りゃ',ryu:'りゅ',ryo:'りょ'};
-const FZ_KATA={a:'ア',i:'イ',u:'ウ',e:'エ',o:'オ',ka:'カ',ki:'キ',ku:'ク',ke:'ケ',ko:'コ',sa:'サ',shi:'シ',si:'シ',su:'ス',se:'セ',so:'ソ',ta:'タ',chi:'チ',ti:'チ',tsu:'ツ',tu:'ツ',te:'テ',to:'ト',na:'ナ',ni:'ニ',nu:'ヌ',ne:'ネ',no:'ノ',ha:'ハ',hi:'ヒ',fu:'フ',hu:'フ',he:'ヘ',ho:'ホ',ma:'マ',mi:'ミ',mu:'ム',me:'メ',mo:'モ',ya:'ヤ',yu:'ユ',yo:'ヨ',ra:'ラ',ri:'リ',ru:'ル',re:'レ',ro:'ロ',wa:'ワ',wo:'ヲ',n:'ン',ga:'ガ',gi:'ギ',gu:'グ',ge:'ゲ',go:'ゴ',za:'ザ',ji:'ジ',zi:'ジ',zu:'ズ',ze:'ゼ',zo:'ゾ',da:'ダ',de:'デ',do:'ド',ba:'バ',bi:'ビ',bu:'ブ',be:'ベ',bo:'ボ',pa:'パ',pi:'ピ',pu:'プ',pe:'ペ',po:'ポ',sha:'シャ',shu:'シュ',sho:'ショ',cha:'チャ',chu:'チュ',cho:'チョ',kya:'キャ',kyu:'キュ',kyo:'キョ',rya:'リャ',ryu:'リュ',ryo:'リョ',fa:'ファ',fi:'フィ',fe:'フェ',fo:'フォ',va:'ヴァ',vi:'ヴィ',ve:'ヴェ',vo:'ヴォ'};
-const FZ_PRESET={arjun:{h:'あるじゅん',k:'アルジュン'},priya:{h:'ぷりや',k:'プリヤ'},rahul:{h:'らふる',k:'ラフル'},anjali:{h:'あんじゃり',k:'アンジャリ'},vikram:{h:'びくらむ',k:'ビクラム'},sneha:{h:'すねは',k:'スネハ'},rohan:{h:'ろはん',k:'ロハン'},deepa:{h:'でぃーぱ',k:'ディーパ'},arun:{h:'あるん',k:'アルン'},kavya:{h:'かぶや',k:'カブヤ'},raj:{h:'らじ',k:'ラジ'},nisha:{h:'にしゃ',k:'ニシャ'},amit:{h:'あみと',k:'アミト'},pooja:{h:'ぷーじゃ',k:'プージャ'},suresh:{h:'すれし',k:'スレシ'},krishna:{h:'くりしゅな',k:'クリシュナ'},meera:{h:'みーら',k:'ミーラ'},ravi:{h:'らび',k:'ラビ'},divya:{h:'でぃびや',k:'ディビヤ'},lakshmi:{h:'らくしゅみ',k:'ラクシュミ'},haruto:{h:'はると',k:'ハルト'},sakura:{h:'さくら',k:'サクラ'},yuki:{h:'ゆき',k:'ユキ'},ken:{h:'けん',k:'ケン'},akira:{h:'あきら',k:'アキラ'}};
-const FZ_STROKES={あ:[[[20,18],[22,30],[16,42]],[[28,12],[34,12]],[[30,14],[26,28],[18,38],[28,46],[40,40],[42,30]]],い:[[[18,16],[18,36],[22,44]],[[36,14],[36,44]]],う:[[[28,12],[28,18]],[[16,24],[28,22],[40,24],[40,34],[30,44],[20,46]]],え:[[[28,14],[28,20]],[[14,26],[42,26]],[[28,26],[22,38],[26,46],[38,44]]],お:[[[28,12],[28,22]],[[14,22],[42,22]],[[28,22],[20,34],[24,44],[36,42],[40,32]]],か:[[[20,14],[20,44]],[[20,28],[38,20]],[[34,22],[38,44]]],き:[[[14,20],[42,20]],[[14,30],[42,30]],[[28,14],[28,34]],[[28,34],[24,42],[28,48],[36,44]]],く:[[[36,16],[22,28],[36,44]]],け:[[[20,14],[20,44]],[[20,24],[38,20]],[[36,20],[36,44]]],こ:[[[14,20],[42,20]],[[14,40],[42,40]]],さ:[[[14,20],[42,20]],[[28,14],[28,28]],[[28,28],[20,40],[24,48],[36,44],[40,34]]],し:[[[28,14],[28,40],[22,46],[16,42]]],す:[[[28,14],[28,22]],[[14,22],[42,22]],[[28,22],[34,32],[28,44],[18,48]]],せ:[[[20,20],[20,44]],[[14,28],[42,28],[42,14]],[[30,28],[30,48]]],そ:[[[16,16],[40,16],[30,22]],[[30,22],[16,34],[22,44],[38,44]]],た:[[[14,22],[42,22]],[[28,14],[28,44]],[[28,30],[36,24]],[[36,24],[40,44]]],ち:[[[14,20],[42,20]],[[28,20],[28,36],[18,44],[16,38]]],つ:[[[16,24],[32,18],[40,28],[36,44],[24,48]]],て:[[[14,24],[42,24]],[[28,14],[26,34],[28,44],[38,42]]],と:[[[24,14],[24,30]],[[14,28],[30,28],[38,36],[34,46],[22,48]]],な:[[[18,20],[36,20]],[[28,14],[28,44]],[[14,34],[22,30],[28,34]],[[28,34],[24,44],[28,48],[40,44]]],に:[[[18,18],[18,44]],[[18,30],[36,30]],[[36,14],[36,44]]],ぬ:[[[20,14],[20,28],[28,28]],[[28,14],[28,44]],[[28,28],[18,40],[22,48],[36,42],[40,32]]],ね:[[[18,14],[18,44]],[[18,24],[38,20],[38,40],[28,48],[18,44]]],の:[[[28,14],[36,24],[36,36],[26,46],[16,40],[16,28],[28,14]]],は:[[[18,14],[18,44]],[[18,28],[36,22],[36,44]],[[36,32],[28,44],[30,48],[40,44]]],ひ:[[[18,18],[28,18],[36,24],[36,36],[28,44],[18,40]]],ふ:[[[28,14],[28,20]],[[14,22],[42,22]],[[18,28],[22,36],[28,44],[34,36],[38,28]]],へ:[[[14,30],[28,20],[42,30]]],ほ:[[[18,14],[18,44]],[[14,26],[42,26]],[[30,26],[30,44]],[[30,36],[24,46],[28,50],[38,46]]],ま:[[[14,22],[42,22]],[[14,34],[42,34]],[[28,14],[28,50]]],み:[[[16,16],[20,28],[18,40],[24,46],[30,44]],[[34,14],[34,38],[28,46],[20,48]]],む:[[[14,20],[38,20],[38,32],[28,40]],[[28,40],[18,46],[20,50],[30,50],[42,44]]],め:[[[16,20],[22,20],[28,26],[28,36],[18,44]],[[34,16],[34,36],[28,44]]],も:[[[14,24],[42,24]],[[14,36],[42,36]],[[28,14],[26,44]]],や:[[[16,22],[28,18],[36,24],[34,44]],[[14,36],[34,36]]],ゆ:[[[16,20],[16,44]],[[16,30],[38,24],[40,44]],[[24,44],[40,44]]],よ:[[[14,22],[40,22]],[[14,36],[40,36]],[[28,14],[26,44]]],ら:[[[14,20],[40,20]],[[28,20],[26,34],[20,44],[26,48],[38,44],[40,36]]],り:[[[20,14],[20,36],[24,44]],[[36,14],[36,44]]],る:[[[28,14],[36,22],[34,34],[22,40],[24,48],[36,46],[42,38],[42,28]]],れ:[[[18,14],[18,44]],[[18,24],[38,20],[36,40],[28,48],[18,44]]],ろ:[[[14,20],[40,20],[38,40],[26,48],[14,44]]],わ:[[[18,14],[18,44]],[[18,26],[36,20],[38,36],[30,44],[20,46]]],を:[[[14,20],[40,20]],[[14,30],[40,30]],[[28,14],[22,38],[28,48],[38,42]]],ん:[[[18,20],[22,30],[18,38],[22,44],[34,44],[40,36],[38,28]]],ア:[[[14,22],[42,22]],[[28,14],[28,50]]],イ:[[[18,16],[28,40]],[[36,14],[28,40],[26,50]]],ウ:[[[28,12],[28,18]],[[14,22],[42,22]],[[28,22],[28,50]]],エ:[[[14,22],[42,22]],[[28,22],[28,40]],[[14,40],[42,40]]],オ:[[[14,22],[42,22]],[[28,14],[28,50]],[[28,36],[38,50]]],カ:[[[14,22],[42,22]],[[30,14],[28,50]]],キ:[[[14,20],[42,20]],[[14,32],[42,32]],[[28,14],[28,50]]],ク:[[[28,14],[36,22],[22,40]],[[22,40],[16,46]]],ケ:[[[20,14],[20,44]],[[20,26],[38,20]],[[38,20],[38,50]]],コ:[[[14,18],[42,18],[42,44]],[[14,44],[14,18]]],サ:[[[14,22],[42,22]],[[28,14],[28,40]],[[28,40],[18,48]]],シ:[[[16,22],[20,26]],[[16,32],[20,36]],[[24,42],[38,22]]],ス:[[[14,22],[42,22]],[[28,22],[34,34],[26,46],[18,48]]],セ:[[[20,22],[20,44]],[[14,30],[42,30],[42,14]],[[30,30],[30,50]]],ソ:[[[18,18],[22,22]],[[30,14],[26,42],[38,34]]],タ:[[[14,22],[42,22]],[[28,14],[26,34],[32,50]]],チ:[[[14,22],[42,22]],[[28,14],[26,34],[32,50]]],ツ:[[[18,20],[22,26]],[[28,18],[32,26]],[[38,16],[30,42],[20,48]]],テ:[[[14,22],[42,22]],[[28,14],[28,42]],[[18,42],[38,42]]],ト:[[[24,14],[24,50]],[[24,30],[38,42]]],ナ:[[[14,26],[42,26]],[[28,14],[28,50]]],ニ:[[[16,22],[40,22]],[[12,42],[44,42]]],ヌ:[[[14,22],[42,22]],[[28,14],[20,38],[32,46],[42,36]]],ネ:[[[28,14],[28,22]],[[14,22],[42,22]],[[28,22],[20,38],[28,50],[36,38]]],ノ:[[[36,14],[18,50]]],ハ:[[[20,18],[22,50]],[[38,14],[32,50]]],ヒ:[[[18,14],[18,44]],[[18,28],[36,28]],[[36,14],[36,44]]],フ:[[[14,18],[42,18],[28,50]]],ヘ:[[[14,32],[28,20],[42,32]]],ホ:[[[28,14],[28,50]],[[14,28],[42,28]],[[28,40],[20,50]],[[28,40],[36,50]]],マ:[[[14,20],[42,20],[28,50]]],ミ:[[[16,20],[36,20]],[[14,30],[38,30]],[[16,40],[40,40]]],ム:[[[18,14],[18,32],[28,50],[40,28]]],メ:[[[14,24],[42,24]],[[28,14],[20,42],[34,36]]],モ:[[[14,22],[42,22]],[[14,34],[42,34]],[[28,14],[28,50]]],ヤ:[[[16,26],[28,20],[40,26]],[[28,20],[28,50]]],ユ:[[[16,24],[40,24],[40,42]],[[16,42],[40,42]]],ヨ:[[[14,18],[40,18],[40,30]],[[14,30],[40,30],[40,44]],[[14,44],[40,44]]],ラ:[[[14,20],[42,20]],[[28,20],[20,50]]],リ:[[[20,14],[22,42],[28,50]],[[36,14],[36,50]]],ル:[[[20,14],[20,38],[28,50]],[[38,14],[28,50]]],レ:[[[20,14],[20,44],[38,36]]],ロ:[[[14,18],[40,18],[40,44],[14,44],[14,18]]],ワ:[[[14,18],[42,18]],[[14,18],[14,44]],[[42,18],[36,44]]],ヲ:[[[14,20],[42,20]],[[14,30],[42,30]],[[28,14],[22,50]]],ン:[[[18,20],[22,24]],[[36,16],[28,50]]]};
-
-let fzTab='hira',fzMenuOpen=false,fzCurrentChars=[],fzSelectedIdx=0,fzAnimTimer=null;
-
-function fzToggle(){fzMenuOpen=!fzMenuOpen;document.getElementById('fzSubmenu').classList.toggle('fz-hidden-menu',!fzMenuOpen);}
-function fzOpenJapanese(){fzMenuOpen=false;document.getElementById('fzSubmenu').classList.add('fz-hidden-menu');document.getElementById('fzOverlay').classList.remove('fz-hidden');setTimeout(()=>document.getElementById('fzNameInput').focus(),100);}
-function fzClose(){document.getElementById('fzOverlay').classList.add('fz-hidden');clearInterval(fzAnimTimer);}
-function fzOnInput(){const v=document.getElementById('fzNameInput').value.trim();if(!v)document.getElementById('fzResultArea').innerHTML='<div class="fz-empty">Enter your name above ✦</div>';}
-function fzSwitchTab(t){fzTab=t;document.getElementById('fzTabHira').classList.toggle('active',t==='hira');document.getElementById('fzTabKata').classList.toggle('active',t==='kata');if(fzCurrentChars.length)fzRender();}
-
-function fzRomanToKana(name){
-  const lower=name.toLowerCase().replace(/[^a-z]/g,'');
-  const preset=FZ_PRESET[lower];
-  if(preset) return [...(fzTab==='hira'?preset.h:preset.k)];
-  const map=fzTab==='hira'?FZ_HIRA:FZ_KATA;
-  let result=[],i=0;
-  while(i<lower.length){let matched=false;for(const len of[3,2,1]){const chunk=lower.slice(i,i+len);if(map[chunk]){result.push(map[chunk]);i+=len;matched=true;break;}}if(!matched){result.push(lower[i]);i++;}}
-  return result;
-}
-function fzConvert(){const name=document.getElementById('fzNameInput').value.trim();if(!name)return;fzCurrentChars=fzRomanToKana(name);fzSelectedIdx=0;fzRender();}
-
-function fzRender(){
-  const area=document.getElementById('fzResultArea');
-  const charsHtml=fzCurrentChars.map((ch,i)=>`<div class="fz-char-card" onclick="fzSelectChar(${i})"><div class="fz-char-box ${i===fzSelectedIdx?'fz-active-char':''}" id="fzCharBox_${i}"><svg width="56" height="56" viewBox="0 0 56 56"><text x="28" y="42" text-anchor="middle" font-size="38" fill="#F0E8D5" font-family="'Noto Serif JP',serif" opacity="${i===fzSelectedIdx?'1':'0.5'}">${ch}</text></svg></div><div class="fz-char-rom">${ch}</div></div>`).join('');
-  const sel=fzCurrentChars[fzSelectedIdx]||'';
-  const strokes=FZ_STROKES[sel]||[[[20,20],[40,20]],[[30,20],[30,40]],[[20,40],[40,40]]];
-  const stepDots=strokes.map((_,si)=>`<div class="fz-step-dot" id="fzDot_${si}" onclick="fzJumpStroke(${si})">${si+1}</div>`).join('');
-  area.innerHTML=`<div class="fz-chars-row">${charsHtml}</div><div class="fz-stroke-panel"><div class="fz-stroke-title">Stroke by stroke · ${sel}</div><div class="fz-big-canvas-wrap"><canvas class="fz-big-canvas" id="fzBigCanvas" width="160" height="160"></canvas></div><div class="fz-stroke-steps">${stepDots}</div><div class="fz-anim-controls"><button class="fz-ctrl-btn" onclick="fzPlayAnim()">▶ Play</button><button class="fz-ctrl-btn" onclick="fzResetAnim()">↺ Reset</button></div></div><button class="fz-dl-btn" onclick="fzDownloadWallpaper()">⬇ Save as Wallpaper</button>`;
-  fzDrawStroke(0);
-}
-function fzSelectChar(i){fzSelectedIdx=i;clearInterval(fzAnimTimer);fzRender();}
-
-function fzDrawStroke(upTo){
-  const canvas=document.getElementById('fzBigCanvas');if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  const sel=fzCurrentChars[fzSelectedIdx]||'';
-  const strokes=FZ_STROKES[sel]||[[[20,20],[40,20]],[[30,20],[30,40]],[[20,40],[40,40]]];
-  const scale=160/56;
-  ctx.clearRect(0,0,160,160);
-  ctx.fillStyle='rgba(8,6,4,0.95)';ctx.fillRect(0,0,160,160);
-  ctx.strokeStyle='rgba(240,232,213,0.06)';ctx.lineWidth=0.5;
-  ctx.beginPath();ctx.moveTo(80,0);ctx.lineTo(80,160);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(0,80);ctx.lineTo(160,80);ctx.stroke();
-  ctx.strokeStyle='rgba(240,232,213,0.04)';ctx.strokeRect(16,16,128,128);
-  strokes.forEach((pts,si)=>{
-    if(si>upTo)return;
-    ctx.beginPath();
-    ctx.strokeStyle=si===upTo?'#C4513A':'rgba(240,232,213,0.5)';
-    ctx.lineWidth=si===upTo?3.5:2.5;ctx.lineCap='round';ctx.lineJoin='round';
-    pts.forEach(([x,y],pi)=>{pi===0?ctx.moveTo(x*scale,y*scale):ctx.lineTo(x*scale,y*scale);});
-    ctx.stroke();
-    if(si===upTo){const last=pts[pts.length-1];ctx.beginPath();ctx.arc(last[0]*scale,last[1]*scale,5,0,Math.PI*2);ctx.fillStyle='#D4AE52';ctx.fill();}
-  });
-  document.querySelectorAll('[id^="fzDot_"]').forEach((d,i)=>{d.classList.remove('fz-done','fz-current');if(i<upTo)d.classList.add('fz-done');else if(i===upTo)d.classList.add('fz-current');});
-}
-function fzPlayAnim(){
-  clearInterval(fzAnimTimer);
-  const sel=fzCurrentChars[fzSelectedIdx]||'';
-  const total=(FZ_STROKES[sel]||[[[0,0],[1,1]]]).length;
-  let step=0;fzDrawStroke(0);
-  fzAnimTimer=setInterval(()=>{step++;if(step>=total){clearInterval(fzAnimTimer);return;}fzDrawStroke(step);},700);
-}
-function fzResetAnim(){clearInterval(fzAnimTimer);fzDrawStroke(0);}
-function fzJumpStroke(i){clearInterval(fzAnimTimer);fzDrawStroke(i);}
-
-function fzDownloadWallpaper(){
-  const name=document.getElementById('fzNameInput').value.trim()||'Name';
-  const wc=document.createElement('canvas');wc.width=1080;wc.height=1920;
-  const ctx=wc.getContext('2d');
-  ctx.fillStyle='#080604';ctx.fillRect(0,0,1080,1920);
-  ctx.strokeStyle='rgba(122,46,30,0.12)';ctx.lineWidth=1;
-  for(let y=0;y<1920;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1080,y);ctx.stroke();}
-  for(let x=0;x<1080;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,1920);ctx.stroke();}
-  ctx.strokeStyle='rgba(122,46,30,0.5)';ctx.lineWidth=3;ctx.strokeRect(40,40,1000,1840);
-  ctx.fillStyle='rgba(184,151,58,0.75)';ctx.font='300 28px serif';ctx.textAlign='center';
-  ctx.fillText('さくら · Sakura Dining · Bangalore',540,110);
-  ctx.fillStyle='rgba(240,232,213,0.15)';ctx.font='300 22px serif';
-  ctx.fillText('My name in Japanese · 私の名前',540,170);
-  ctx.strokeStyle='rgba(122,46,30,0.35)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(140,200);ctx.lineTo(940,200);ctx.stroke();
-  ctx.fillStyle='#F0E8D5';ctx.font='bold 90px serif';ctx.textAlign='center';
-  ctx.fillText(name,540,330);
-  const chars=fzCurrentChars;
-  const charSize=160,gap=24,total=chars.length*(charSize+gap)-gap;
-  let sx=Math.max(60,(1080-total)/2);
-  ctx.font=charSize+'px serif';ctx.textAlign='left';
-  chars.forEach(ch=>{
-    ctx.fillStyle='rgba(122,46,30,0.1)';
-    ctx.beginPath();if(ctx.roundRect)ctx.roundRect(sx-12,380,charSize+24,charSize+24,14);else ctx.rect(sx-12,380,charSize+24,charSize+24);
-    ctx.fill();ctx.strokeStyle='rgba(122,46,30,0.28)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='#F0E8D5';ctx.fillText(ch,sx,380+charSize-8);
-    sx+=charSize+gap;
-  });
-  const script=fzTab==='hira'?'ひらがな — Hiragana':'カタカナ — Katakana';
-  ctx.font='30px serif';ctx.textAlign='center';ctx.fillStyle='rgba(184,151,58,0.6)';
-  ctx.fillText(script,540,380+charSize+60);
-  ctx.strokeStyle='rgba(122,46,30,0.3)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(140,1780);ctx.lineTo(940,1780);ctx.stroke();
-  ctx.font='24px serif';ctx.fillStyle='rgba(240,232,213,0.25)';ctx.textAlign='center';
-  ctx.fillText('Sakura AR Menu · さくら · Table '+FZ_TABLE,540,1830);
-  const link=document.createElement('a');
-  link.download=name+'_in_japanese_sakura.png';
-  link.href=wc.toDataURL('image/png');link.click();
-}
 </script>
-<!-- ── END FUN ZONE · WRITE IN JAPANESE ──────────────────────────────── -->
+<script>
+
+  // all your JS code here...
+
+  function openFunZone(){
+    const toast = document.getElementById("toast");
+
+    toast.textContent = "🎮 Welcome to Fun Zone!";
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+      toast.classList.remove("show");
+    },2000);
+  }
+
+</script>
+<div class="hud-right">
+  <div class="hud-table">七番卓 · Table 07</div>
+
+  <!-- 🎮 Fun Zone Button -->
+  <button onclick="openFunZone()" style="padding:6px 10px;border-radius:6px;background:#7A2E1E;color:white;border:none;cursor:pointer;font-size:11px;">
+    🎮 Fun Zone
+  </button>
+
+  <div class="hud-cart-btn" onclick="openOrder()">🛍
 </body>
 </html>
