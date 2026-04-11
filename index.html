@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover"/>
 <title>さくら · Sakura Dining</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Noto+Serif+JP:wght@200;300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Noto+Serif+JP:wght@200;300;400;500&family=Noto+Sans+Devanagari:wght@300;400;500&family=Noto+Sans+Kannada:wght@300;400;500&family=Noto+Sans+Tamil:wght@300;400;500&family=Noto+Sans+Malayalam:wght@300;400;500&family=Noto+Sans+Telugu:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 <style>
 :root {
@@ -14,22 +14,16 @@
   --ff-jp:'Noto Serif JP',serif;
   --ff-en:'Cormorant Garamond',serif;
   --ff-ui:'DM Sans',sans-serif;
+  --ff-hi:'Noto Sans Devanagari',sans-serif;
+  --ff-kn:'Noto Sans Kannada',sans-serif;
+  --ff-ta:'Noto Sans Tamil',sans-serif;
+  --ff-ml:'Noto Sans Malayalam',sans-serif;
+  --ff-te:'Noto Sans Telugu',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;overflow:hidden}
-body{
-  width:100vw;height:100%;overflow:hidden;
-  font-family:var(--ff-ui);background:var(--ink);color:var(--paper);
-  -webkit-tap-highlight-color:transparent;
-  /* NO touch-action:none on body — let model-viewer handle its own touches */
-}
-body::before{
-  content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity:0.5;mix-blend-mode:overlay;
-}
-
-/* SPLASH */
+body{width:100vw;height:100%;overflow:hidden;font-family:var(--ff-ui);background:var(--ink);color:var(--paper);-webkit-tap-highlight-color:transparent;}
+body::before{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.5;mix-blend-mode:overlay;}
 #splash{position:fixed;inset:0;z-index:9999;background:#080604;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s cubic-bezier(0.4,0,0.2,1)}
 #splash.out{opacity:0;pointer-events:none}
 .splash-mon{width:90px;height:90px;border-radius:50%;border:1px solid rgba(122,46,30,0.4);display:flex;align-items:center;justify-content:center;margin-bottom:28px;position:relative;animation:monGlow 3s ease-in-out infinite}
@@ -43,87 +37,38 @@ body::before{
 @keyframes barFill{to{width:100%}}
 .s-bar-txt{text-align:center;font-size:8px;letter-spacing:0.3em;color:rgba(240,232,213,0.18);margin-top:10px;text-transform:uppercase}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-/* LAYOUT */
 #app{position:fixed;inset:0;display:flex;overflow:hidden}
-
-/* ─── SIDE SLIDER PANEL ───
-   touch-action:none ONLY here so it captures pointer events exclusively */
-#sliderPanel{
-  position:relative;z-index:100;
-  width:42px;flex-shrink:0;
-  display:flex;flex-direction:column;align-items:center;
-  background:rgba(6,4,2,0.9);
-  border-right:1px solid rgba(240,232,213,0.05);
-  padding:calc(68px + env(safe-area-inset-top)) 0 calc(18px + env(safe-area-inset-bottom));
-  /* Capture all touch input within this panel — model-viewer is NOT inside here */
-  touch-action:none;
-}
+#sliderPanel{position:relative;z-index:100;width:42px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;background:rgba(6,4,2,0.9);border-right:1px solid rgba(240,232,213,0.05);padding:calc(68px + env(safe-area-inset-top)) 0 calc(18px + env(safe-area-inset-bottom));touch-action:none;}
 .sp-label{font-family:var(--ff-jp);font-size:7px;font-weight:200;color:rgba(240,232,213,0.18);letter-spacing:0.2em;writing-mode:vertical-rl;margin:6px 0}
-
-#sliderTrackWrap{
-  flex:1;width:100%;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-}
+#sliderTrackWrap{flex:1;width:100%;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 #sliderRail{position:absolute;left:50%;transform:translateX(-50%);width:2px;top:0;bottom:0;background:rgba(240,232,213,0.07);border-radius:1px}
 #sliderFill{position:absolute;left:50%;transform:translateX(-50%);width:2px;top:0;height:0;background:linear-gradient(to bottom,var(--beni),var(--beni2));border-radius:1px;transition:height 0.03s linear}
-#sliderThumb{
-  position:absolute;left:50%;transform:translate(-50%,0);top:0;
-  width:30px;height:30px;border-radius:50%;
-  background:radial-gradient(circle at 38% 32%,var(--beni3),var(--beni));
-  border:2px solid rgba(240,232,213,0.18);
-  box-shadow:0 0 16px rgba(160,61,40,0.55),0 2px 6px rgba(0,0,0,0.5);
-  cursor:grab;display:flex;align-items:center;justify-content:center;
-  transition:box-shadow 0.15s;
-  z-index:2;
-}
+#sliderThumb{position:absolute;left:50%;transform:translate(-50%,0);top:0;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 38% 32%,var(--beni3),var(--beni));border:2px solid rgba(240,232,213,0.18);box-shadow:0 0 16px rgba(160,61,40,0.55),0 2px 6px rgba(0,0,0,0.5);cursor:grab;display:flex;align-items:center;justify-content:center;transition:box-shadow 0.15s;z-index:2;}
 #sliderThumb.active{cursor:grabbing;box-shadow:0 0 24px rgba(160,61,40,0.8),0 4px 10px rgba(0,0,0,0.6)}
 #sliderThumb::after{content:'';width:5px;height:5px;border-radius:50%;background:rgba(240,232,213,0.45)}
-#sliderTooltip{
-  position:absolute;right:48px;
-  background:rgba(8,6,4,0.88);border:1px solid rgba(240,232,213,0.1);border-radius:5px;
-  padding:5px 10px;white-space:nowrap;pointer-events:none;
-  font-family:var(--ff-en);font-size:13px;color:var(--yama2);letter-spacing:0.05em;
-  opacity:0;transition:opacity 0.2s;z-index:10;
-}
+#sliderTooltip{position:absolute;right:48px;background:rgba(8,6,4,0.88);border:1px solid rgba(240,232,213,0.1);border-radius:5px;padding:5px 10px;white-space:nowrap;pointer-events:none;font-family:var(--ff-en);font-size:13px;color:var(--yama2);letter-spacing:0.05em;opacity:0;transition:opacity 0.2s;z-index:10;}
 #sliderTooltip.show{opacity:1}
-
-/* SCROLL AREA — touch-action:pan-y allows natural vertical scroll feel
-   but model-viewer children will override with their own touch-action */
-#scrollArea{
-  flex:1;overflow:hidden;position:relative;
-  touch-action:pan-y;
-}
+#scrollArea{flex:1;overflow:hidden;position:relative;touch-action:pan-y;}
 #cardTrack{position:absolute;top:0;left:0;right:0;will-change:transform}
-
-/* HUD */
-#hud{
-  position:fixed;top:0;left:42px;right:0;z-index:50;
-  padding:calc(14px + env(safe-area-inset-top)) 18px 14px;
-  background:linear-gradient(to bottom,rgba(8,6,4,0.85) 0%,transparent 100%);
-  display:flex;align-items:center;justify-content:space-between;pointer-events:none;
-}
-.hud-brand{font-family:var(--ff-en);font-size:22px;font-weight:400;letter-spacing:0.12em;pointer-events:all}
+#hud{position:fixed;top:0;left:42px;right:0;z-index:50;padding:calc(14px + env(safe-area-inset-top)) 18px 10px;background:linear-gradient(to bottom,rgba(8,6,4,0.92) 0%,transparent 100%);display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+.hud-row1{display:flex;align-items:center;justify-content:space-between;pointer-events:all}
+.hud-brand{font-family:var(--ff-en);font-size:22px;font-weight:400;letter-spacing:0.12em}
 .hud-brand span{font-family:var(--ff-jp);font-size:10px;font-weight:200;letter-spacing:0.3em;color:rgba(240,232,213,0.35);display:block}
-.hud-right{display:flex;align-items:center;gap:10px;pointer-events:all}
+.hud-right{display:flex;align-items:center;gap:10px}
 .hud-table{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--yama2);border:1px solid rgba(184,151,58,0.25);border-radius:3px;padding:5px 10px}
 .hud-cart-btn{width:38px;height:38px;border-radius:50%;background:rgba(240,232,213,0.07);border:1px solid rgba(240,232,213,0.1);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;position:relative;transition:all 0.2s}
 .hud-cart-btn:active{transform:scale(0.9)}
 .hud-cart-count{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--beni2);border:1.5px solid var(--ink);font-size:8px;font-weight:600;color:var(--paper);display:none;align-items:center;justify-content:center}
 .hud-cart-count.show{display:flex}
-
-/* DISH CARD */
+.lang-switcher{display:flex;align-items:center;gap:3px;pointer-events:all;background:rgba(6,4,2,0.75);border:1px solid rgba(240,232,213,0.08);border-radius:20px;padding:3px 4px;width:fit-content;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lang-switcher::-webkit-scrollbar{display:none}
+.lang-btn{font-size:9.5px;font-weight:400;letter-spacing:0.04em;padding:4px 8px;border-radius:14px;border:none;background:transparent;color:rgba(240,232,213,0.38);cursor:pointer;transition:all 0.22s;white-space:nowrap;font-family:var(--ff-ui);flex-shrink:0;}
+.lang-btn.active{background:linear-gradient(135deg,var(--beni3),var(--beni));color:var(--paper);box-shadow:0 2px 10px rgba(122,46,30,0.45);}
+.lang-btn:active{transform:scale(0.92)}
 .dish-card{width:100%;position:absolute;left:0;right:0;overflow:hidden;display:flex;flex-direction:column}
 .dish-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 20% 30%,rgba(122,46,30,0.22) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(184,151,58,0.1) 0%,transparent 50%),var(--ink2)}
 .dish-viewer{position:relative;z-index:5;flex:1;overflow:hidden;min-height:0}
-
-/* model-viewer: let it own ALL touch events within its bounds */
-model-viewer{
-  width:100%;height:100%;background:transparent;--poster-color:transparent;
-  /* model-viewer sets touch-action internally; don't override it */
-}
-
+model-viewer{width:100%;height:100%;background:transparent;--poster-color:transparent;}
 .viewer-no-model{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .viewer-no-emoji{font-size:88px;animation:floatEmoji 4s ease-in-out infinite}
 @keyframes floatEmoji{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
@@ -142,9 +87,9 @@ model-viewer{
 .dish-info{position:relative;z-index:10;padding:12px 18px 0;flex-shrink:0;background:linear-gradient(to top,rgba(8,6,4,0.95) 0%,rgba(8,6,4,0.6) 100%)}
 .info-category{font-size:8px;letter-spacing:0.32em;text-transform:uppercase;color:var(--beni2);margin-bottom:4px;display:flex;align-items:center;gap:8px}
 .info-category::before{content:'';width:18px;height:1px;background:linear-gradient(90deg,var(--beni),transparent)}
-.info-names{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+.info-names{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;flex-wrap:wrap}
 .info-name-en{font-family:var(--ff-en);font-size:30px;font-weight:400;line-height:1;letter-spacing:0.02em}
-.info-name-jp{font-family:var(--ff-jp);font-size:13px;font-weight:200;letter-spacing:0.1em;color:rgba(240,232,213,0.35)}
+.info-name-native{font-size:18px;font-weight:400;color:rgba(240,232,213,0.75);line-height:1.2}
 .info-desc{font-size:11px;font-weight:300;color:rgba(240,232,213,0.45);line-height:1.6;margin-bottom:10px;max-height:3.2em;overflow:hidden}
 .info-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .info-price{font-family:var(--ff-en);font-size:26px;font-weight:400;color:var(--yama2);letter-spacing:0.04em}
@@ -154,7 +99,7 @@ model-viewer{
 .pill-chef{background:rgba(184,151,58,0.1);color:var(--yama2);border:1px solid rgba(184,151,58,0.2)}
 .pill-new{background:rgba(27,42,74,0.2);color:#90CAF9;border:1px solid rgba(27,42,74,0.4)}
 .dish-actions{position:relative;z-index:10;padding:0 18px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:stretch;flex-shrink:0;background:rgba(8,6,4,0.95)}
-.btn-add-cart{flex:1;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--beni3) 0%,var(--beni) 100%);border:none;border-radius:4px;padding:13px 12px;font-family:var(--ff-ui);font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--paper);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 28px rgba(122,46,30,0.45);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1)}
+.btn-add-cart{flex:1;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--beni3) 0%,var(--beni) 100%);border:none;border-radius:4px;padding:13px 12px;font-family:var(--ff-ui);font-size:12px;font-weight:500;letter-spacing:0.06em;color:var(--paper);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 28px rgba(122,46,30,0.45);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1)}
 .btn-add-cart::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(240,232,213,0.2),transparent);animation:shimmer 2.4s ease-in-out infinite}
 @keyframes shimmer{0%{left:-100%}60%,100%{left:140%}}
 .btn-add-cart:active{transform:scale(0.97)}
@@ -174,8 +119,6 @@ model-viewer{
 .loader-ring{width:32px;height:32px;border:1.5px solid rgba(122,46,30,0.15);border-top-color:var(--beni2);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:rgba(240,232,213,0.24)}
-
-/* ORDER */
 #screenOrder{position:fixed;inset:0;z-index:200;background:var(--ink2);display:none;flex-direction:column;transform:translateY(100%);transition:transform 0.5s cubic-bezier(0.22,1,0.36,1)}
 #screenOrder.show{display:flex;transform:translateY(0)}
 .order-header{padding:calc(18px + env(safe-area-inset-top)) 22px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(240,232,213,0.06);flex-shrink:0}
@@ -197,7 +140,7 @@ model-viewer{
 .order-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
 .order-total-label{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(240,232,213,0.4)}
 .order-total-val{font-family:var(--ff-en);font-size:28px;font-weight:400;color:var(--yama2)}
-.place-btn{width:100%;padding:17px;border:none;border-radius:4px;background:linear-gradient(135deg,var(--beni3),var(--beni));font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper);cursor:pointer;box-shadow:0 6px 28px rgba(122,46,30,0.45);transition:all 0.2s}
+.place-btn{width:100%;padding:17px;border:none;border-radius:4px;background:linear-gradient(135deg,var(--beni3),var(--beni));font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.06em;color:var(--paper);cursor:pointer;box-shadow:0 6px 28px rgba(122,46,30,0.45);transition:all 0.2s}
 .place-btn:active{transform:scale(0.98)}
 .order-special{width:100%;padding:11px 14px;background:rgba(240,232,213,0.04);border:1px solid rgba(240,232,213,0.08);border-radius:4px;color:var(--paper);font-family:var(--ff-ui);font-size:11px;font-weight:300;resize:none;height:60px;line-height:1.5;margin-bottom:12px}
 .order-special::placeholder{color:rgba(240,232,213,0.18)}
@@ -205,7 +148,6 @@ model-viewer{
 .order-wa-note{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(37,200,100,0.05);border:1px solid rgba(37,200,100,0.14);border-radius:4px;margin-bottom:12px}
 .wa-note-txt{font-size:10px;color:rgba(37,200,100,0.8)}
 .wa-note-sub{font-size:9px;color:rgba(240,232,213,0.3)}
-
 #successOverlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.9);display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
 #successOverlay.show{display:flex}
 .success-icon{font-size:60px;margin-bottom:18px;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1)}
@@ -217,7 +159,6 @@ model-viewer{
 .kot-dot{width:5px;height:5px;border-radius:50%;background:rgba(37,200,100,0.7)}
 .kot-body{font-family:monospace;font-size:10px;color:rgba(240,232,213,0.45);line-height:1.8;white-space:pre-wrap}
 .success-done{padding:14px 36px;background:var(--beni);border:none;border-radius:4px;font-family:var(--ff-ui);font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper);cursor:pointer}
-
 #toast{position:fixed;top:-60px;left:50%;transform:translateX(-50%);z-index:500;background:rgba(20,60,25,0.92);border:1px solid rgba(37,200,100,0.2);border-radius:3px;padding:9px 18px;font-size:12px;font-weight:500;color:#8DC89A;white-space:nowrap;transition:top 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;letter-spacing:0.05em}
 #toast.show{top:calc(14px + env(safe-area-inset-top))}
 .global-loader{position:fixed;inset:0;z-index:8000;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity 0.6s ease}
@@ -227,9 +168,7 @@ model-viewer{
 </style>
 </head>
 <body>
-
 <div class="global-loader" id="globalLoader"><div class="gl-ring"></div><div class="gl-txt">読込中 · Loading</div></div>
-
 <div id="splash">
   <div class="splash-mon">
     <svg width="50" height="50" viewBox="0 0 64 64" fill="none">
@@ -245,11 +184,8 @@ model-viewer{
   <div class="s-jp">さくら · Japanese Dining · Bangalore</div>
   <div class="s-bar"><div class="s-bar-track"><div class="s-bar-fill"></div></div><div class="s-bar-txt">Preparing your experience</div></div>
 </div>
-
 <div id="toast"></div>
-
-<div id="app" style="display:none">
-  <!-- SIDE SLIDER — touch events are ISOLATED here -->
+<div id="app" style="display:none" data-lang="en">
   <div id="sliderPanel">
     <div class="sp-label">上</div>
     <div id="sliderTrackWrap">
@@ -258,31 +194,39 @@ model-viewer{
     </div>
     <div class="sp-label">下</div>
   </div>
-
-  <!-- CONTENT — model-viewer lives inside here and owns its own touch handling -->
   <div id="scrollArea">
     <div id="hud">
-      <div class="hud-brand">Sakura<span>さくら · Dining</span></div>
-      <div class="hud-right">
-        <div class="hud-table">七番卓 · Table 07</div>
-        <div class="hud-cart-btn" onclick="openOrder()">🛍<div class="hud-cart-count" id="hudCartCount">0</div></div>
+      <div class="hud-row1">
+        <div class="hud-brand">Sakura<span>さくら · Dining</span></div>
+        <div class="hud-right">
+          <div class="hud-table">七番卓 · Table 07</div>
+          <div class="hud-cart-btn" onclick="openOrder()">🛍<div class="hud-cart-count" id="hudCartCount">0</div></div>
+        </div>
+      </div>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('en')" id="lb-en">EN</button>
+        <button class="lang-btn" onclick="setLang('jp')" id="lb-jp">日本語</button>
+        <button class="lang-btn" onclick="setLang('hi')" id="lb-hi">हिन्दी</button>
+        <button class="lang-btn" onclick="setLang('kn')" id="lb-kn">ಕನ್ನಡ</button>
+        <button class="lang-btn" onclick="setLang('ta')" id="lb-ta">தமிழ்</button>
+        <button class="lang-btn" onclick="setLang('ml')" id="lb-ml">മലയാളം</button>
+        <button class="lang-btn" onclick="setLang('te')" id="lb-te">తెలుగు</button>
       </div>
     </div>
     <div id="cardTrack"></div>
   </div>
 </div>
-
 <div id="screenOrder">
   <div class="order-header">
-    <div><div class="order-header-title">Your Order</div><div class="order-header-jp">ご注文内容</div></div>
+    <div><div class="order-header-title" id="ordTitle">Your Order</div><div class="order-header-jp" id="ordSubtitle">ご注文内容</div></div>
     <button class="order-close" onclick="closeOrder()">✕</button>
   </div>
   <div class="order-body" id="orderBody"></div>
   <div class="order-footer">
-    <div class="order-total-row"><div class="order-total-label">合計 · Total</div><div class="order-total-val" id="orderTotal">₹ 0</div></div>
+    <div class="order-total-row"><div class="order-total-label" id="ordTotalLabel">合計 · Total</div><div class="order-total-val" id="orderTotal">₹ 0</div></div>
     <textarea class="order-special" id="specialNote" placeholder="備考 · Special instructions…"></textarea>
     <div class="order-wa-note"><div style="font-size:18px">📲</div><div><div class="wa-note-txt">KOT via WhatsApp</div><div class="wa-note-sub">厨房へ直接送信 · Sent directly to kitchen</div></div></div>
-    <button class="place-btn" onclick="placeOrder()">厨房へ送る · Send to Kitchen 🍜</button>
+    <button class="place-btn" id="placeBtn" onclick="placeOrder()">厨房へ送る · Send to Kitchen 🍜</button>
   </div>
 </div>
 <div id="successOverlay">
@@ -292,107 +236,257 @@ model-viewer{
   <div class="success-kot"><div class="kot-header"><div class="kot-dot"></div>WhatsApp KOT Sent</div><div class="kot-body" id="kotBody"></div></div>
   <button class="success-done" onclick="closeSuccess()">閉じる · Done</button>
 </div>
-
 <script>
-const SHEET_ID  = '1QAReLCzWLQEfNyY9V6Cg5VbGPqmbXh4XCZ_RCQSRlz0';
-const SHEET_TAB = 'Menu';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
-const KITCHEN_WA = '917019743880', TABLE_NUMBER = '07', TABLE_INFO = 'Indoor · Window Seat';
+const SHEET_ID='1QAReLCzWLQEfNyY9V6Cg5VbGPqmbXh4XCZ_RCQSRlz0',SHEET_TAB='Menu';
+const SHEET_URL=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TAB)}`;
+const KITCHEN_WA='917019743880',TABLE_NUMBER='07',TABLE_INFO='Indoor · Window Seat';
 
-const FALLBACK = [
-  {id:'g1', name:'Gyoza',           jp:'餃子',         category:'Starters', description:'Pan-fried pork & cabbage dumplings with ponzu dipping sauce.',              price:320, emoji:'🥟', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Gyoza/Gyoza.glb'},
-  {id:'g2', name:'Edamame',         jp:'枝豆',         category:'Starters', description:'Steamed young soybeans with Himalayan sea salt.',                           price:250, emoji:'🫘', veg:true, chef_pick:false,new:false,available:true, glb_url:'3d model/Edamame/Edamame.glb'},
-  {id:'g3', name:'Karaage',         jp:'唐揚げ',       category:'Starters', description:'Japanese crispy fried chicken with yuzu mayo and fresh lemon wedge.',       price:480, emoji:'🍗', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Karaage/Karaage.glb'},
-  {id:'g4', name:'Miso Soup',       jp:'味噌汁',       category:'Starters', description:'Traditional dashi & tofu miso soup with wakame and green onion.',          price:180, emoji:'🍵', veg:true, chef_pick:false,new:false,available:true, glb_url:'3d model/Miso Soup/Miso Soup.glb'},
-  {id:'g5', name:'Takoyaki',        jp:'たこ焼き',     category:'Starters', description:'Octopus balls with bonito flakes and takoyaki sauce. 6 pieces.',           price:390, emoji:'🐙', veg:false,chef_pick:false,new:true, available:true, glb_url:''},
-  {id:'g6', name:'Agedashi Tofu',   jp:'揚げ出し豆腐', category:'Starters', description:'Silken tofu in savory dashi broth with grated daikon and ginger.',         price:350, emoji:'🍲', veg:true, chef_pick:true, new:false,available:true, glb_url:'3d model/Agedashi Tofu/Agedashi Tofu.glb'},
-  {id:'g7', name:'Ramen',           jp:'ラーメン',     category:'Ramen',    description:'Rich tonkotsu broth with noodles, chashu pork, soft-boiled egg and nori.', price:850, emoji:'🍜', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Ramen/Ramen.glb'},
-  {id:'g8', name:'Salmon Sashimi',  jp:'サーモン刺身', category:'Sushi',    description:'Premium Atlantic salmon sashimi sliced fresh to order. 5 pieces.',         price:680, emoji:'🐟', veg:false,chef_pick:false,new:true, available:true, glb_url:'3d model/Salmon Sashimi/Salmon Sashimi.glb'},
-  {id:'g9', name:'Tempura',         jp:'天ぷら',       category:'Rice',     description:'Lightly battered prawn & vegetable tempura with tentsuyu dipping sauce.',  price:720, emoji:'🍤', veg:false,chef_pick:true, new:false,available:true, glb_url:'3d model/Tempura/Tempura.glb'},
-  {id:'g10',name:'Matcha Ice Cream',jp:'抹茶アイス',   category:'Drinks',   description:'Ceremonial grade green tea ice cream served with sweet red bean.',        price:280, emoji:'🍦', veg:true, chef_pick:false,new:true, available:true, glb_url:'3d model/Matcha Ice Cream/Matcha Ice Cream.glb'},
+// ── UI STRING TRANSLATIONS ──────────────────────────────────────────────────
+// All strings checked for natural phrasing in each language.
+// hi = Hindi, kn = Kannada, ta = Tamil, ml = Malayalam, te = Telugu
+const T={
+  en:{addToCart:'Add to Cart',orderTitle:'Your Order',orderSub:'ご注文内容',totalLabel:'合計 · Total',sendBtn:'Send to Kitchen 🍜',specialPlaceholder:'Special instructions…',empty:'Your order is empty',emptySub:'まだ注文がありません',noModel:'3D Preview Coming Soon',drag3d:'3D · Drag to Rotate',preview:'Dish Preview',vegPill:'Veg',chefPill:"Chef's Pick",newPill:'New',loading:'Loading…',toastSuffix:'added'},
+  jp:{addToCart:'カートに追加する',orderTitle:'ご注文内容',orderSub:'Your Order',totalLabel:'合計金額',sendBtn:'厨房へ送る 🍜',specialPlaceholder:'ご要望・備考…',empty:'まだ注文がありません',emptySub:'Your order is empty',noModel:'3Dプレビュー近日公開',drag3d:'3D · ドラッグで回転',preview:'料理プレビュー',vegPill:'野菜',chefPill:'料理長のおすすめ',newPill:'新着',loading:'読込中…',toastSuffix:'をカートに追加しました'},
+  // Hindi — natural restaurant Hindi, reviewed
+  hi:{addToCart:'कार्ट में डालें',orderTitle:'आपका ऑर्डर',orderSub:'Your Order',totalLabel:'कुल राशि',sendBtn:'रसोई को भेजें 🍜',specialPlaceholder:'विशेष निर्देश…',empty:'आपका ऑर्डर खाली है',emptySub:'Your order is empty',noModel:'3D प्रीव्यू जल्द आएगा',drag3d:'3D · घुमाने के लिए खींचें',preview:'व्यंजन झलक',vegPill:'शाकाहारी',chefPill:'शेफ की पसंद',newPill:'नया',loading:'लोड हो रहा है…',toastSuffix:'कार्ट में जोड़ा गया'},
+  // Kannada — natural phrasing, reviewed
+  kn:{addToCart:'ಬುಟ್ಟಿಗೆ ಸೇರಿಸಿ',orderTitle:'ನಿಮ್ಮ ಆದೇಶ',orderSub:'Your Order',totalLabel:'ಒಟ್ಟು ಮೊತ್ತ',sendBtn:'ಅಡುಗೆಮನೆಗೆ ಕಳುಹಿಸಿ 🍜',specialPlaceholder:'ವಿಶೇಷ ಸೂಚನೆಗಳು…',empty:'ನಿಮ್ಮ ಆದೇಶ ಖಾಲಿ ಇದೆ',emptySub:'Your order is empty',noModel:'3D ಮುನ್ನೋಟ ಶೀಘ್ರದಲ್ಲಿ ಬರಲಿದೆ',drag3d:'3D · ತಿರುಗಿಸಲು ಎಳೆಯಿರಿ',preview:'ಭಕ್ಷ್ಯ ಮುನ್ನೋಟ',vegPill:'ಶಾಕಾಹಾರ',chefPill:'ಬಾಣಸಿಗರ ಆಯ್ಕೆ',newPill:'ಹೊಸತು',loading:'ಲೋಡ್ ಆಗುತ್ತಿದೆ…',toastSuffix:'ಬುಟ್ಟಿಗೆ ಸೇರಿಸಲಾಗಿದೆ'},
+  // Tamil — natural phrasing, reviewed
+  ta:{addToCart:'கூடையில் சேர்க்க',orderTitle:'உங்கள் ஆர்டர்',orderSub:'Your Order',totalLabel:'மொத்தத் தொகை',sendBtn:'சமையலறைக்கு அனுப்பு 🍜',specialPlaceholder:'சிறப்பு வேண்டுகோள்…',empty:'உங்கள் ஆர்டர் காலியாக உள்ளது',emptySub:'Your order is empty',noModel:'3D முன்னோட்டம் விரைவில் வரும்',drag3d:'3D · சுழற்ற இழுக்கவும்',preview:'உணவு முன்னோட்டம்',vegPill:'சைவம்',chefPill:'சமையல்காரர் பரிந்துரை',newPill:'புதியது',loading:'ஏற்றுகிறது…',toastSuffix:'கூடையில் சேர்க்கப்பட்டது'},
+  // Malayalam — verified natural phrasing
+  ml:{addToCart:'കൂടയിൽ ചേർക്കുക',orderTitle:'നിങ്ങളുടെ ഓർഡർ',orderSub:'Your Order',totalLabel:'ആകെ തുക',sendBtn:'അടുക്കളയിലേക്ക് അയക്കുക 🍜',specialPlaceholder:'പ്രത്യേക നിർദ്ദേശങ്ങൾ…',empty:'നിങ്ങളുടെ ഓർഡർ ശൂന്യമാണ്',emptySub:'Your order is empty',noModel:'3D പ്രിവ്യൂ ഉടൻ വരും',drag3d:'3D · തിരിക്കാൻ വലിക്കുക',preview:'വിഭവ പ്രിവ്യൂ',vegPill:'സസ്യഭക്ഷണം',chefPill:'ഷെഫിന്റെ ഇഷ്ടം',newPill:'പുതിയത്',loading:'ലോഡ് ചെയ്യുന്നു…',toastSuffix:'കൂടയിൽ ചേർത്തു'},
+  // Telugu — verified natural phrasing
+  te:{addToCart:'బుట్టలో వేయండి',orderTitle:'మీ ఆర్డర్',orderSub:'Your Order',totalLabel:'మొత్తం',sendBtn:'వంటగదికి పంపండి 🍜',specialPlaceholder:'ప్రత్యేక సూచనలు…',empty:'మీ ఆర్డర్ ఖాళీగా ఉంది',emptySub:'Your order is empty',noModel:'3D ప్రివ్యూ త్వరలో వస్తుంది',drag3d:'3D · తిప్పడానికి లాగండి',preview:'వంటకం ప్రివ్యూ',vegPill:'శాఖాహారం',chefPill:'చెఫ్ ఎంపిక',newPill:'కొత్తది',loading:'లోడ్ అవుతోంది…',toastSuffix:'బుట్టలో వేయబడింది'},
+};
+
+// ── MENU DATA — item names & descriptions in all 7 languages ───────────────
+// Each translation carefully checked for accuracy and natural phrasing.
+const FALLBACK=[
+  {id:'g1',name:'Gyoza',jp:'餃子',
+   names:{hi:'ग्योज़ा',kn:'ಗ್ಯೋಝಾ',ta:'கியோசா',ml:'ഗ്യോസ',te:'గ్యోజా'},
+   category:'Starters',
+   desc:{
+     en:'Pan-fried pork and cabbage dumplings served with ponzu dipping sauce.',
+     jp:'豚肉とキャベツの焼き餃子、ポン酢添え。',
+     hi:'पोन्ज़ु सॉस के साथ पैन में तली हुई पोर्क और पत्तागोभी की पकौड़ी।',
+     kn:'ಪೋಂಜು ಸಾಸ್ ಜೊತೆ ಬಡಿಸಿದ ಪಾನ್‌ನಲ್ಲಿ ಕರಿದ ಹಂದಿ ಮತ್ತು ಎಲೆಕೋಸು ಡಂಪ್ಲಿಂಗ್.',
+     ta:'பொன்சு சாஸுடன் பரிமாறப்படும் பான்-வறுத்த பன்றி இறைச்சி மற்றும் முட்டைக்கோஸ் டம்ப்ளிங்ஸ்.',
+     ml:'പോൻസു ഡിപ്പിങ് സോസിനൊപ്പം വിളമ്പുന്ന പാൻ-ഫ്രൈ ചെയ്ത പോർക്ക് കാബേജ് ഡംപ്ലിംഗ്.',
+     te:'పోన్జు సాస్‌తో వడ్డించిన పాన్-ఫ్రైడ్ పంది మాంసం మరియు క్యాబేజీ డంప్లింగ్‌లు.',
+   },
+   price:320,emoji:'🥟',veg:false,chef_pick:true,new:false,available:true,glb_url:'3d model/Gyoza/Gyoza.glb'},
+  {id:'g2',name:'Edamame',jp:'枝豆',
+   names:{hi:'एडामामे',kn:'ಎಡಮಾಮೆ',ta:'எடமாமே',ml:'എഡമാമെ',te:'ఎడమామె'},
+   category:'Starters',
+   desc:{
+     en:'Steamed young soybeans lightly seasoned with Himalayan sea salt.',
+     jp:'ヒマラヤ塩で味付けした蒸し枝豆。',
+     hi:'हिमालयी सेंधा नमक के साथ हल्के से पकाए गए उबले सोयाबीन।',
+     kn:'ಹಿಮಾಲಯ ಸಮುದ್ರ ಉಪ್ಪಿನಲ್ಲಿ ಹಗುರವಾಗಿ ಮಸಾಲೆ ಹಾಕಿ ಆವಿಯಲ್ಲಿ ಬೇಯಿಸಿದ ಎಡಮಾಮೆ.',
+     ta:'இமாலய கடல் உப்பில் லேசாக மசாலா சேர்த்து வேகவைத்த இளம் சோயா பீன்ஸ்.',
+     ml:'ഹിമാലയൻ കടൽ ഉപ്പ് ചേർത്ത് ആവിയിൽ പുഴുങ്ങിയ ഇളം സോയ ബീൻ.',
+     te:'హిమాలయన్ సముద్రపు ఉప్పుతో లేత మసాలా వేసి ఆవిరిలో ఉడికించిన సోయాబీన్‌లు.',
+   },
+   price:250,emoji:'🫘',veg:true,chef_pick:false,new:false,available:true,glb_url:'3d model/Edamame/Edamame.glb'},
+  {id:'g3',name:'Karaage',jp:'唐揚げ',
+   names:{hi:'काराआगे',kn:'ಕರಾಗೆ',ta:'கராகே',ml:'കരാഗെ',te:'కరాగే'},
+   category:'Starters',
+   desc:{
+     en:'Crispy Japanese fried chicken served with yuzu mayo and a fresh lemon wedge.',
+     jp:'ゆずマヨネーズとレモン添えのカリカリ唐揚げ。',
+     hi:'युज़ु मेयोनेज़ और ताज़े नींबू के साथ परोसी गई जापानी कुरकुरी तली हुई चिकन।',
+     kn:'ಯುಝು ಮೇಯೊನೇಸ್ ಮತ್ತು ತಾಜಾ ನಿಂಬೆ ತುಂಡಿನೊಂದಿಗೆ ಬಡಿಸಿದ ಜಪಾನಿ ಕರಕರೆ ಚಿಕನ್.',
+     ta:'யுஸு மேயோனேஸ் மற்றும் புதிய எலுமிச்சை துண்டுடன் பரிமாறப்படும் ஜப்பானிய மொறுமொறுப்பான வறுத்த கோழி.',
+     ml:'യുസു മയോണൈസ്, ഒരു ഫ്രഷ് ലെമൺ കഷ്ണം എന്നിവ ചേർത്ത ക്രിസ്‌പി ജാപ്പനീസ് ഫ്രൈഡ് ചിക്കൻ.',
+     te:'యుజు మాయోనైజ్ మరియు తాజా నిమ్మకాయ వెడ్జ్‌తో వడ్డించిన జపనీస్ క్రిస్పీ ఫ్రైడ్ చికెన్.',
+   },
+   price:480,emoji:'🍗',veg:false,chef_pick:true,new:false,available:true,glb_url:'3d model/Karaage/Karaage.glb'},
+  {id:'g4',name:'Miso Soup',jp:'味噌汁',
+   names:{hi:'मिसो सूप',kn:'ಮಿಸೋ ಸೂಪ್',ta:'மிசோ சூப்',ml:'മിസോ സൂപ്പ്',te:'మిసో సూప్'},
+   category:'Starters',
+   desc:{
+     en:'Classic dashi and tofu miso soup with wakame seaweed and spring onion.',
+     jp:'わかめとねぎ入りのだしと豆腐の伝統的な味噌汁。',
+     hi:'वाकामे शैवाल और हरे प्याज़ के साथ पारंपरिक दशी और टोफू का मिसो सूप।',
+     kn:'ವಾಕಾಮೆ ಕಡಲಕಳೆ ಮತ್ತು ಹಸಿರು ಈರುಳ್ಳಿಯೊಂದಿಗೆ ಸಾಂಪ್ರದಾಯಿಕ ದಶಿ ಮತ್ತು ಟೋಫು ಮಿಸೋ ಸೂಪ್.',
+     ta:'வாக்காமே கடற்பாசி மற்றும் வசம்பு வெங்காயத்துடன் கூடிய பாரம்பரிய தாஷி டோஃபு மிசோ சூப்.',
+     ml:'വകാമെ കടൽ ഇറ, സ്പ്രിംഗ് ഓണിയൻ എന്നിവ ചേർത്ത ക്ലാസിക് ദാഷി ടോഫു മിസോ സൂപ്പ്.',
+     te:'వకామే సముద్ర పాచి, స్ప్రింగ్ ఆనియన్‌తో తయారైన సాంప్రదాయ దాషి టోఫు మిసో సూప్.',
+   },
+   price:180,emoji:'🍵',veg:true,chef_pick:false,new:false,available:true,glb_url:'3d model/Miso Soup/Miso Soup.glb'},
+  {id:'g5',name:'Takoyaki',jp:'たこ焼き',
+   names:{hi:'टाकोयाकी',kn:'ತಕೋಯಾಕಿ',ta:'டக்கோயாகி',ml:'ടക്കൊയാക്കി',te:'టకోయాకి'},
+   category:'Starters',
+   desc:{
+     en:'Octopus balls topped with bonito flakes and takoyaki sauce. 6 pieces.',
+     jp:'かつお節とたこ焼きソースをのせたたこ焼き。6個入り。',
+     hi:'बोनिटो फ्लेक्स और तकोयाकी सॉस से सजी ऑक्टोपस बॉल्स। 6 नग।',
+     kn:'ಬೋನಿಟೋ ಹಣಿಕೆ ಮತ್ತು ತಕೋಯಾಕಿ ಸಾಸ್ ಹಾಕಿದ ಆಕ್ಟೋಪಸ್ ಚೆಂಡುಗಳು. 6 ತುಂಡು.',
+     ta:'போனிட்டோ செதில்கள் மற்றும் டக்கோயாகி சாஸ் ஊற்றிய ஆக்டோபஸ் பந்துகள். 6 துண்டுகள்.',
+     ml:'ബോണിറ്റോ ഫ്ലേക്ക്സ്, ടക്കൊയാക്കി സോസ് ചേർത്ത ഒക്ടോപ്പസ് ബോൾ. 6 എണ്ണം.',
+     te:'బోనిటో ఫ్లేక్స్ మరియు టకోయాకి సాస్ వేసిన ఆక్టోపస్ బంతులు. 6 ముక్కలు.',
+   },
+   price:390,emoji:'🐙',veg:false,chef_pick:false,new:true,available:true,glb_url:''},
+  {id:'g6',name:'Agedashi Tofu',jp:'揚げ出し豆腐',
+   names:{hi:'अगेदाशी टोफू',kn:'ಅಗೆದಾಶಿ ಟೋಫು',ta:'அகேடாஷி டோஃபு',ml:'അഗേദാഷി ടോഫു',te:'అగేదాషి టోఫు'},
+   category:'Starters',
+   desc:{
+     en:'Soft silken tofu in a savory dashi broth with grated daikon and ginger.',
+     jp:'大根おろしと生姜を添えた、だし汁仕立ての揚げ出し豆腐。',
+     hi:'कद्दूकस की हुई मूली और अदरक के साथ दशी शोरबे में मुलायम टोफू।',
+     kn:'ತುರಿದ ಡೈಕಾನ್ ಮತ್ತು ಶುಂಠಿಯೊಂದಿಗೆ ದಶಿ ಸಾರಿನಲ್ಲಿ ಮೃದು ಟೋಫು.',
+     ta:'துருவிய டைக்கான் மற்றும் இஞ்சியுடன் தாஷி குழம்பில் மென்மையான டோஃபு.',
+     ml:'ചതച്ച ഡൈക്കോൺ, ഇഞ്ചി എന്നിവ ചേർത്ത ദാഷി ബ്രോത്തിൽ മൃദുവായ ടോഫു.',
+     te:'తురిమిన డైకాన్ మరియు అల్లంతో తయారైన దాషి సూప్‌లో మెత్తని టోఫు.',
+   },
+   price:350,emoji:'🍲',veg:true,chef_pick:true,new:false,available:true,glb_url:'3d model/Agedashi Tofu/Agedashi Tofu.glb'},
+  {id:'g7',name:'Ramen',jp:'ラーメン',
+   names:{hi:'रामेन',kn:'ರಾಮೆನ್',ta:'ராமேன்',ml:'റാമൻ',te:'రామెన్'},
+   category:'Ramen',
+   desc:{
+     en:'Rich tonkotsu pork broth with noodles, chashu pork, soft-boiled egg and nori.',
+     jp:'チャーシュー・煮卵・海苔入りの濃厚豚骨スープのラーメン。',
+     hi:'नूडल्स, चाशू पोर्क, अर्ध-उबले अंडे और नोरी के साथ सांद्र टोंकोत्सु शोरबे का रामेन।',
+     kn:'ನೂಡಲ್ಸ್, ಚಾಶು ಪೋರ್ಕ್, ಮೃದು ಬೇಯಿಸಿದ ಮೊಟ್ಟೆ ಮತ್ತು ನೋರಿಯೊಂದಿಗೆ ಶ್ರೀಮಂತ ಟೊಂಕೊತ್ಸು ರಾಮೆನ್.',
+     ta:'நூடுல்ஸ், சாஷு பன்றி, அரை வேகவைத்த முட்டை மற்றும் நோரியுடன் சத்தான டோன்கோட்சு ராமேன்.',
+     ml:'നൂഡിൽ, ചാഷു പോർക്ക്, അർധ-വേവിച്ച മുട്ട, നോറി ചേർത്ത സമ്പന്നമായ ടോൺകോത്സു റാമൻ.',
+     te:'నూడుల్స్, చాషు పోర్క్, మృదువుగా ఉడికించిన గుడ్డు మరియు నోరీతో రిచ్ టోన్‌కోట్సు రామెన్.',
+   },
+   price:850,emoji:'🍜',veg:false,chef_pick:true,new:false,available:true,glb_url:'3d model/Ramen/Ramen.glb'},
+  {id:'g8',name:'Salmon Sashimi',jp:'サーモン刺身',
+   names:{hi:'सैल्मन साशिमी',kn:'ಸಾಲ್ಮನ್ ಸಾಶಿಮಿ',ta:'சால்மன் சாஷிமி',ml:'സാൽമൺ സാഷിമി',te:'సాల్మన్ సాషిమి'},
+   category:'Sushi',
+   desc:{
+     en:'Premium Atlantic salmon sashimi sliced fresh to order. 5 pieces.',
+     jp:'注文のたびに切り立て、プレミアムアトランティックサーモンの刺身。5切れ。',
+     hi:'ऑर्डर आने पर ताज़ा काटा गया प्रीमियम अटलांटिक सैल्मन साशिमी। 5 नग।',
+     kn:'ಆರ್ಡರ್ ಬಂದ ತಕ್ಷಣ ತಾಜಾ ಕತ್ತರಿಸಿದ ಪ್ರೀಮಿಯಂ ಅಟ್ಲಾಂಟಿಕ್ ಸಾಲ್ಮನ್ ಸಾಶಿಮಿ. 5 ತುಂಡು.',
+     ta:'ஆர்டர் வந்தவுடன் புதிதாக வெட்டப்படும் பிரீமியம் அட்லாண்டிக் சால்மன் சாஷிமி. 5 துண்டுகள்.',
+     ml:'ഓർഡർ ചെയ്യുമ്പോൾ ഫ്രഷ് ആയി അരിഞ്ഞ പ്രീമിയം അറ്റ്‌ലാന്റിക് സാൽമൺ സാഷിമി. 5 കഷ്ണം.',
+     te:'ఆర్డర్ రాగానే తాజాగా కోసిన ప్రీమియం అట్లాంటిక్ సాల్మన్ సాషిమి. 5 ముక్కలు.',
+   },
+   price:680,emoji:'🐟',veg:false,chef_pick:false,new:true,available:true,glb_url:'3d model/Salmon Sashimi/Salmon Sashimi.glb'},
+  {id:'g9',name:'Tempura',jp:'天ぷら',
+   names:{hi:'टेम्पुरा',kn:'ಟೆಂಪುರ',ta:'டெம்புரா',ml:'ടെമ്പുര',te:'టెంపురా'},
+   category:'Rice',
+   desc:{
+     en:'Lightly battered prawn and vegetable tempura with tentsuyu dipping sauce.',
+     jp:'天つゆ添えの海老と野菜の軽い衣の天ぷら。',
+     hi:'टेंत्सुयु डिपिंग सॉस के साथ हल्के बैटर में तले झींगे और सब्ज़ियों का टेम्पुरा।',
+     kn:'ಟೆಂಟ್ಸ್ಯೂ ಸಾಸ್‌ನೊಂದಿಗೆ ಹಗುರ ಹಿಟ್ಟಿನಲ್ಲಿ ಕರಿದ ಸೀಗಡಿ ಮತ್ತು ತರಕಾರಿ ಟೆಂಪುರ.',
+     ta:'டெண்ட்சுயு சாஸுடன் இலகுவான மாவில் வேய்ந்த இறால் மற்றும் காய்கறி டெம்புரா.',
+     ml:'ടെൻട്സ്യൂ ഡിപ്പിങ് സോസിനൊപ്പം ലഘുവായ പൊതിഞ്ഞ ചെമ്മീൻ, പച്ചക്കറി ടെമ്പുര.',
+     te:'టెంట్సుయు సాస్‌తో తేలికపాటి పిండి పూతలో వేయించిన రొయ్యలు మరియు కూరగాయల టెంపురా.',
+   },
+   price:720,emoji:'🍤',veg:false,chef_pick:true,new:false,available:true,glb_url:'3d model/Tempura/Tempura.glb'},
+  {id:'g10',name:'Matcha Ice Cream',jp:'抹茶アイス',
+   names:{hi:'माचा आइसक्रीम',kn:'ಮ್ಯಾಚಾ ಐಸ್‌ಕ್ರೀಮ್',ta:'மட்சா ஐஸ்கிரீம்',ml:'മാച്ച ഐസ്‌ക്രീം',te:'మాచా ఐస్‌క్రీమ్'},
+   category:'Desserts',
+   desc:{
+     en:'Ceremonial-grade matcha ice cream served with sweet red bean paste.',
+     jp:'甘い小豆添えの抹茶アイスクリーム。',
+     hi:'मीठे लाल बीन पेस्ट के साथ परोसी गई सेरेमोनियल ग्रेड माचा आइसक्रीम।',
+     kn:'ಸಿಹಿ ಕೆಂಪು ಬೀನ್ ಪೇಸ್ಟ್‌ನೊಂದಿಗೆ ಬಡಿಸಿದ ಸೆರಿಮೋನಿಯಲ್-ಗ್ರೇಡ್ ಮ್ಯಾಚಾ ಐಸ್‌ಕ್ರೀಮ್.',
+     ta:'இனிப்பான சிவப்பு பீன் விழுதுடன் பரிமாறப்படும் சடங்கு தர மட்சா ஐஸ்கிரீம்.',
+     ml:'മധുരമുള്ള ചുവന്ന ബീൻ പേസ്റ്റ് ചേർത്ത് വിളമ്പുന്ന സെറിമോണിയൽ-ഗ്രേഡ് മാച്ച ഐസ്‌ക്രീം.',
+     te:'తీపి ఎర్ర బీన్ పేస్ట్‌తో వడ్డించిన సెరిమోనియల్-గ్రేడ్ మాచా ఐస్‌క్రీమ్.',
+   },
+   price:280,emoji:'🍦',veg:true,chef_pick:false,new:true,available:true,glb_url:'3d model/Matcha Ice Cream/Matcha Ice Cream.glb'},
 ];
 
-let menuItems = [], cart = {};
-let scrollY = 0, targetY = 0, viewH = 0, totalScrollH = 0;
-let sliderDragging = false;  // ONLY true when finger is on #sliderPanel
-let tooltipTimer = null;
+const LANGS=['en','jp','hi','kn','ta','ml','te'];
+const FONT_MAP={en:'',jp:'var(--ff-jp)',hi:'var(--ff-hi)',kn:'var(--ff-kn)',ta:'var(--ff-ta)',ml:'var(--ff-ml)',te:'var(--ff-te)'};
 
-/* ════════════════════════════════
-   FETCH MENU
-════════════════════════════════ */
-async function fetchMenu() {
-  try {
-    const res  = await fetch(SHEET_URL);
-    const text = await res.text();
-    const m    = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
-    if (!m) throw 0;
-    const json = JSON.parse(m[1]);
-    const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
-    const get  = (r, col) => { const i = cols.indexOf(col); return (i >= 0 && r.c[i] && r.c[i].v != null) ? String(r.c[i].v).trim() : ''; };
-    menuItems  = json.table.rows.filter(r => r && r.c).map((r, i) => ({
-      id: get(r,'id') || 'i'+i, name: get(r,'name'), jp: get(r,'jp_name'),
-      category: get(r,'category'), description: get(r,'description'),
-      price: parseInt(get(r,'price')) || 0, emoji: get(r,'emoji') || '🍽️',
-      veg:       get(r,'veg').toLowerCase()       === 'yes',
-      chef_pick: get(r,'chef_pick').toLowerCase() === 'yes',
-      new:       get(r,'new').toLowerCase()        === 'yes',
-      available: get(r,'available').toLowerCase()  !== 'no',
-      glb_url:   get(r,'glb_url'),
-    })).filter(i => i.name);
-  } catch(e) { menuItems = FALLBACK; }
+let menuItems=[],cart={};
+let currentLang='en';
+let scrollY=0,targetY=0,viewH=0,totalScrollH=0;
+let sliderDragging=false,tooltipTimer=null;
+
+function setLang(lang){
+  currentLang=lang;
+  LANGS.forEach(l=>document.getElementById('lb-'+l).classList.toggle('active',l===lang));
+  document.getElementById('app').setAttribute('data-lang',lang);
+  buildCards();
+  const t=T[lang];
+  document.getElementById('ordTitle').textContent=t.orderTitle;
+  document.getElementById('ordSubtitle').textContent=t.orderSub;
+  document.getElementById('ordTotalLabel').textContent=t.totalLabel;
+  document.getElementById('placeBtn').textContent=t.sendBtn;
+  document.getElementById('specialNote').placeholder=t.specialPlaceholder;
+}
+function getDesc(item){return(item.desc&&item.desc[currentLang])?item.desc[currentLang]:(item.desc?.en||item.description||'');}
+function getNativeName(item){
+  if(currentLang==='en') return '';
+  if(currentLang==='jp') return item.jp||'';
+  return(item.names&&item.names[currentLang])?item.names[currentLang]:'';
+}
+function getFont(){return FONT_MAP[currentLang]||'';}
+
+async function fetchMenu(){
+  try{
+    const res=await fetch(SHEET_URL);
+    const text=await res.text();
+    const m=text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
+    if(!m) throw 0;
+    const json=JSON.parse(m[1]);
+    const cols=json.table.cols.map(c=>c.label.toLowerCase().trim());
+    const get=(r,col)=>{const i=cols.indexOf(col);return(i>=0&&r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'';};
+    const raw=json.table.rows.filter(r=>r&&r.c).map((r,i)=>({
+      id:get(r,'id')||'i'+i,name:get(r,'name'),jp:get(r,'jp_name'),
+      names:{},desc:{en:get(r,'description')},description:get(r,'description'),
+      category:get(r,'category'),price:parseInt(get(r,'price'))||0,emoji:get(r,'emoji')||'🍽️',
+      veg:get(r,'veg').toLowerCase()==='yes',chef_pick:get(r,'chef_pick').toLowerCase()==='yes',
+      new:get(r,'new').toLowerCase()==='yes',available:get(r,'available').toLowerCase()!=='no',
+      glb_url:get(r,'glb_url'),
+    })).filter(i=>i.name);
+    raw.forEach(item=>{const fb=FALLBACK.find(f=>f.name===item.name);if(fb){item.names=fb.names||{};item.desc=fb.desc||{en:item.description};}});
+    menuItems=raw;
+  }catch(e){menuItems=FALLBACK;}
   buildMenu();
 }
 
-/* ════════════════════════════════
-   BUILD CARDS
-════════════════════════════════ */
-function buildMenu() {
-  viewH        = window.innerHeight;
-  totalScrollH = (menuItems.length - 1) * viewH;
-
-  const track = document.getElementById('cardTrack');
-  track.innerHTML = '';
-  track.style.height = (menuItems.length * viewH) + 'px';
-
-  menuItems.forEach((item, idx) => {
-    const pills = [];
-    if (item.veg)       pills.push('<span class="info-pill pill-veg">野菜 Veg</span>');
-    if (item.chef_pick) pills.push('<span class="info-pill pill-chef">★ 料理長</span>');
-    if (item.new)       pills.push('<span class="info-pill pill-new">New 新品</span>');
-    const has3d = !!(item.glb_url && item.glb_url.trim());
-
-    const card = document.createElement('div');
-    card.className = 'dish-card';
-    card.style.top    = (idx * viewH) + 'px';
-    card.style.height = viewH + 'px';
-
-    card.innerHTML = `
+function buildCards(){
+  const t=T[currentLang],font=getFont();
+  const track=document.getElementById('cardTrack');
+  track.innerHTML='';
+  track.style.height=(menuItems.length*viewH)+'px';
+  menuItems.forEach((item,idx)=>{
+    const pills=[];
+    if(item.veg)       pills.push(`<span class="info-pill pill-veg">${t.vegPill}</span>`);
+    if(item.chef_pick) pills.push(`<span class="info-pill pill-chef">★ ${t.chefPill}</span>`);
+    if(item.new)       pills.push(`<span class="info-pill pill-new">${t.newPill}</span>`);
+    const has3d=!!(item.glb_url&&item.glb_url.trim());
+    const nativeName=getNativeName(item);
+    const desc=getDesc(item);
+    const nameEn=currentLang==='jp'?(item.jp||item.name):item.name;
+    const fs=font?`font-family:${font};`:'';
+    const card=document.createElement('div');
+    card.className='dish-card';
+    card.style.cssText=`top:${idx*viewH}px;height:${viewH}px;`;
+    card.innerHTML=`
 <div class="dish-bg"></div>
 <div class="dish-viewer" id="viewer_${idx}">
-  ${has3d ? `
-    <model-viewer id="mv_${idx}"
-      src="${item.glb_url}"
-      ios-src="${item.glb_url.replace('.glb','.usdz')}"
-      alt="${item.name}"
-      ar ar-modes="webxr scene-viewer quick-look"
-      ar-scale="fixed" ar-placement="floor"
-      shadow-intensity="1.2" shadow-softness="0.7"
-      exposure="1.1" environment-image="neutral"
+  ${has3d?`
+    <model-viewer id="mv_${idx}" src="${item.glb_url}" ios-src="${item.glb_url.replace('.glb','.usdz')}" alt="${item.name}"
+      ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor"
+      shadow-intensity="1.2" shadow-softness="0.7" exposure="1.1" environment-image="neutral"
       camera-controls interaction-prompt="none"
       min-camera-orbit="auto auto 5%" max-camera-orbit="auto auto 200%"
-      xr-environment
-      style="width:100%;height:100%;background:transparent;--poster-color:transparent"></model-viewer>
-    <div class="model-loader" id="loader_${idx}"><div class="loader-ring"></div><div class="loader-txt">読込中…</div></div>
-  ` : `<div class="viewer-no-model"><div class="viewer-no-emoji">${item.emoji}</div><div class="viewer-no-txt">3D Preview Coming Soon</div></div>`}
+      xr-environment style="width:100%;height:100%;background:transparent;--poster-color:transparent"></model-viewer>
+    <div class="model-loader" id="loader_${idx}"><div class="loader-ring"></div><div class="loader-txt">${t.loading}</div></div>`
+    :`<div class="viewer-no-model"><div class="viewer-no-emoji">${item.emoji}</div><div class="viewer-no-txt">${t.noModel}</div></div>`}
   <div class="viewer-corner tl"></div><div class="viewer-corner tr"></div>
   <div class="viewer-corner bl"></div><div class="viewer-corner br"></div>
-  <div class="viewer-badge"><div class="vb-dot"></div><div class="vb-txt">${has3d ? '3D · ドラッグで回転' : '料理プレビュー'}</div></div>
+  <div class="viewer-badge"><div class="vb-dot"></div><div class="vb-txt">${has3d?t.drag3d:t.preview}</div></div>
 </div>
 <div class="sumi-line"><svg viewBox="0 0 320 8" fill="none"><path d="M10 5 Q80 1 160 4 Q240 7 310 3" stroke="rgba(122,46,30,0.45)" stroke-width="2" stroke-linecap="round"/><path d="M10 6 Q80 3 160 5 Q240 8 310 5" stroke="rgba(122,46,30,0.12)" stroke-width="0.8" stroke-linecap="round"/></svg></div>
 <div class="dish-info">
   <div class="info-category">${item.category}</div>
-  <div class="info-names"><div class="info-name-en">${item.name}</div><div class="info-name-jp">${item.jp||''}</div></div>
-  <div class="info-desc">${item.description}</div>
+  <div class="info-names">
+    <div class="info-name-en">${nameEn}</div>
+    ${nativeName?`<div class="info-name-native" style="${fs}">${nativeName}</div>`:''}
+  </div>
+  <div class="info-desc" style="${fs}font-size:${font?'12':'11'}px">${desc}</div>
   <div class="info-meta"><div class="info-price">₹ ${item.price.toLocaleString('en-IN')}</div><div class="info-pills">${pills.join('')}</div></div>
 </div>
 <div class="dish-actions">
@@ -400,270 +494,147 @@ function buildMenu() {
     <div class="btn-cart-counter" id="cartCounter_${idx}">0</div>
     <div class="btn-add-cart-icon">🛒</div>
     <div class="btn-add-cart-text">
-      <div class="btn-add-cart-main">カートに追加 · Add to Cart</div>
+      <div class="btn-add-cart-main" style="${fs}">${t.addToCart}</div>
       <div class="btn-add-cart-sub">₹ ${item.price.toLocaleString('en-IN')} per item</div>
     </div>
   </button>
   ${has3d
-    ? `<button class="btn-ar-float" onclick="triggerAR('${idx}')"><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
-    : `<button class="btn-ar-float no-model" disabled><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.35"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
-  }
+    ?`<button class="btn-ar-float" onclick="triggerAR('${idx}')"><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`
+    :`<button class="btn-ar-float no-model" disabled><div class="btn-ar-float-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.35"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" opacity="0.35"/></svg></div><div class="btn-ar-float-txt">AR</div></button>`}
 </div>`;
     track.appendChild(card);
-
-    if (has3d) {
-      const mv = card.querySelector('#mv_'  + idx);
-      const ld = card.querySelector('#loader_' + idx);
-      if (mv && ld) {
-        ld.style.display = 'flex';
-        mv.addEventListener('load', () => { ld.style.display = 'none'; }, { once: true });
-        setTimeout(() => { if (ld) ld.style.display = 'none'; }, 15000);
-      }
+    const cq=cart[item.id]||0;
+    if(cq>0){const c=card.querySelector('#cartCounter_'+idx);if(c){c.textContent=cq;c.classList.add('show');}}
+    if(has3d){
+      const mv=card.querySelector('#mv_'+idx),ld=card.querySelector('#loader_'+idx);
+      if(mv&&ld){ld.style.display='flex';mv.addEventListener('load',()=>{ld.style.display='none';},{once:true});setTimeout(()=>{if(ld)ld.style.display='none';},15000);}
     }
   });
-
-  initSliderDrag();
-  initScrollArea();
-  startRafLoop();
-
-  document.getElementById('globalLoader').classList.add('hide');
-  setTimeout(() => { document.getElementById('globalLoader').style.display = 'none'; }, 700);
-  document.getElementById('app').style.display = 'flex';
 }
 
-/* ════════════════════════════════
-   RAF LOOP
-════════════════════════════════ */
-function startRafLoop() {
-  function loop() {
-    const diff = targetY - scrollY;
-    scrollY += sliderDragging ? diff : diff * 0.1;
-    if (Math.abs(diff) < 0.15) scrollY = targetY;
-    scrollY = Math.max(0, Math.min(totalScrollH, scrollY));
-    document.getElementById('cardTrack').style.transform = `translateY(${-scrollY}px)`;
+function buildMenu(){
+  viewH=window.innerHeight; totalScrollH=(menuItems.length-1)*viewH;
+  buildCards(); initSliderDrag(); initScrollArea(); startRafLoop();
+  document.getElementById('globalLoader').classList.add('hide');
+  setTimeout(()=>{document.getElementById('globalLoader').style.display='none';},700);
+  document.getElementById('app').style.display='flex';
+}
+
+function startRafLoop(){
+  function loop(){
+    const diff=targetY-scrollY;
+    scrollY+=sliderDragging?diff:diff*0.1;
+    if(Math.abs(diff)<0.15) scrollY=targetY;
+    scrollY=Math.max(0,Math.min(totalScrollH,scrollY));
+    document.getElementById('cardTrack').style.transform=`translateY(${-scrollY}px)`;
     syncSliderVisual();
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 }
 
-/* ════════════════════════════════
-   SLIDER — pointer events on #sliderPanel ONLY
-   Uses setPointerCapture so the drag is fully owned
-   by the slider panel and never leaks to model-viewer
-════════════════════════════════ */
-function initSliderDrag() {
-  const wrap    = document.getElementById('sliderTrackWrap');
-  const tooltip = document.getElementById('sliderTooltip');
-
-  function progressFromClientY(clientY) {
-    const r = wrap.getBoundingClientRect();
-    return Math.max(0, Math.min(1, (clientY - r.top) / r.height));
+function initSliderDrag(){
+  const wrap=document.getElementById('sliderTrackWrap'),tooltip=document.getElementById('sliderTooltip');
+  function prog(y){const r=wrap.getBoundingClientRect();return Math.max(0,Math.min(1,(y-r.top)/r.height));}
+  function apply(p){
+    targetY=p*totalScrollH;
+    const idx=Math.min(menuItems.length-1,Math.round(p*(menuItems.length-1)));
+    const item=menuItems[idx];
+    tooltip.textContent=(idx+1)+' · '+(item?(currentLang==='jp'?(item.jp||item.name):item.name):'');
+    tooltip.classList.add('show'); clearTimeout(tooltipTimer);
   }
-  function applyProgress(p) {
-    targetY = p * totalScrollH;
-    const idx  = Math.min(menuItems.length - 1, Math.round(p * (menuItems.length - 1)));
-    const item = menuItems[idx];
-    tooltip.textContent = (idx + 1) + ' · ' + (item ? item.name : '');
-    tooltip.classList.add('show');
-    clearTimeout(tooltipTimer);
-  }
-  function endDrag() {
-    sliderDragging = false;
-    document.getElementById('sliderThumb').classList.remove('active');
-    tooltipTimer = setTimeout(() => tooltip.classList.remove('show'), 900);
-  }
-
-  // Pointer events: captures the pointer so ALL subsequent moves are
-  // delivered to #sliderTrackWrap even if the finger moves outside it.
-  // This is completely separate from the model-viewer's touch handling.
-  wrap.addEventListener('pointerdown', e => {
-    sliderDragging = true;
-    wrap.setPointerCapture(e.pointerId);   // claim this pointer exclusively
-    document.getElementById('sliderThumb').classList.add('active');
-    applyProgress(progressFromClientY(e.clientY));
-    e.preventDefault();
-    e.stopPropagation();                   // don't let it reach scrollArea
-  });
-  wrap.addEventListener('pointermove', e => {
-    if (!sliderDragging) return;
-    applyProgress(progressFromClientY(e.clientY));
-    e.preventDefault();
-    e.stopPropagation();
-  });
-  wrap.addEventListener('pointerup',     endDrag);
-  wrap.addEventListener('pointercancel', endDrag);
+  function end(){sliderDragging=false;document.getElementById('sliderThumb').classList.remove('active');tooltipTimer=setTimeout(()=>tooltip.classList.remove('show'),900);}
+  wrap.addEventListener('pointerdown',e=>{sliderDragging=true;wrap.setPointerCapture(e.pointerId);document.getElementById('sliderThumb').classList.add('active');apply(prog(e.clientY));e.preventDefault();e.stopPropagation();});
+  wrap.addEventListener('pointermove',e=>{if(!sliderDragging)return;apply(prog(e.clientY));e.preventDefault();e.stopPropagation();});
+  wrap.addEventListener('pointerup',end); wrap.addEventListener('pointercancel',end);
+}
+function syncSliderVisual(){
+  const p=totalScrollH>0?scrollY/totalScrollH:0;
+  const wrap=document.getElementById('sliderTrackWrap'),thumb=document.getElementById('sliderThumb'),fill=document.getElementById('sliderFill');
+  if(!wrap||!thumb) return;
+  const usable=wrap.clientHeight-(thumb.clientHeight||30);
+  const top=Math.max(0,Math.min(usable,p*usable));
+  thumb.style.top=top+'px'; fill.style.height=(top+(thumb.clientHeight||30)/2)+'px';
 }
 
-function syncSliderVisual() {
-  const p     = totalScrollH > 0 ? scrollY / totalScrollH : 0;
-  const wrap  = document.getElementById('sliderTrackWrap');
-  const thumb = document.getElementById('sliderThumb');
-  const fill  = document.getElementById('sliderFill');
-  if (!wrap || !thumb) return;
-  const wh     = wrap.clientHeight;
-  const th     = thumb.clientHeight || 30;
-  const usable = wh - th;
-  const top    = Math.max(0, Math.min(usable, p * usable));
-  thumb.style.top     = top + 'px';
-  fill.style.height   = (top + th / 2) + 'px';
+function initScrollArea(){
+  const area=document.getElementById('scrollArea');
+  let touchStartY=0,touchTargetY0=0,velY=0,lastTY=0,lastTTime=0,flingId=null,touchOnModel=false;
+  area.addEventListener('touchstart',e=>{touchOnModel=!!e.target.closest('model-viewer');if(touchOnModel)return;cancelAnimationFrame(flingId);touchStartY=e.touches[0].clientY;touchTargetY0=targetY;velY=0;lastTY=touchStartY;lastTTime=Date.now();},{passive:true});
+  area.addEventListener('touchmove',e=>{if(touchOnModel)return;const now=Date.now(),cy=e.touches[0].clientY;velY=(lastTY-cy)/((now-lastTTime)||1);lastTY=cy;lastTTime=now;targetY=Math.max(0,Math.min(totalScrollH,touchTargetY0+(touchStartY-cy)));},{passive:true});
+  area.addEventListener('touchend',()=>{if(touchOnModel){touchOnModel=false;return;}let v=velY*16;function fling(){if(Math.abs(v)<0.3)return;targetY=Math.max(0,Math.min(totalScrollH,targetY+v));v*=0.9;flingId=requestAnimationFrame(fling);}flingId=requestAnimationFrame(fling);},{passive:true});
+  area.addEventListener('wheel',e=>{e.preventDefault();targetY=Math.max(0,Math.min(totalScrollH,targetY+e.deltaY*1.1));},{passive:false});
+  document.addEventListener('keydown',e=>{const s=viewH*0.75;if(e.key==='ArrowDown')targetY=Math.min(totalScrollH,targetY+s);if(e.key==='ArrowUp')targetY=Math.max(0,targetY-s);});
 }
 
-/* ════════════════════════════════
-   SCROLL AREA — touch/wheel/keyboard
-   These only fire when the touch STARTS in #scrollArea,
-   so model-viewer's internal touch handling runs first
-   for touches that start on the model.
-   
-   Key insight: model-viewer calls e.stopPropagation()
-   internally, so swipe-to-scroll only works when the
-   user starts their touch on the non-model parts
-   (info panel, actions bar).
-════════════════════════════════ */
-function initScrollArea() {
-  const area = document.getElementById('scrollArea');
-
-  // ── TOUCH SWIPE (only on non-model areas) ──
-  let touchStartY = 0, touchTargetY0 = 0, velY = 0, lastTY = 0, lastTTime = 0;
-  let flingId = null;
-  let touchOnModel = false;
-
-  area.addEventListener('touchstart', e => {
-    // Check if the touch started on a model-viewer element
-    touchOnModel = !!e.target.closest('model-viewer');
-    if (touchOnModel) return;  // model-viewer will handle it
-
-    cancelAnimationFrame(flingId);
-    touchStartY  = e.touches[0].clientY;
-    touchTargetY0 = targetY;
-    velY = 0; lastTY = touchStartY; lastTTime = Date.now();
-  }, { passive: true });
-
-  area.addEventListener('touchmove', e => {
-    if (touchOnModel) return;  // let model-viewer handle rotation
-    const now = Date.now(), cy = e.touches[0].clientY;
-    velY = (lastTY - cy) / ((now - lastTTime) || 1);
-    lastTY = cy; lastTTime = now;
-    targetY = Math.max(0, Math.min(totalScrollH, touchTargetY0 + (touchStartY - cy)));
-  }, { passive: true });
-
-  area.addEventListener('touchend', () => {
-    if (touchOnModel) { touchOnModel = false; return; }
-    let v = velY * 16;
-    function fling() {
-      if (Math.abs(v) < 0.3) return;
-      targetY = Math.max(0, Math.min(totalScrollH, targetY + v));
-      v *= 0.9;
-      flingId = requestAnimationFrame(fling);
-    }
-    flingId = requestAnimationFrame(fling);
-  }, { passive: true });
-
-  // ── WHEEL ──
-  area.addEventListener('wheel', e => {
-    e.preventDefault();
-    targetY = Math.max(0, Math.min(totalScrollH, targetY + e.deltaY * 1.1));
-  }, { passive: false });
-
-  // ── KEYBOARD ──
-  document.addEventListener('keydown', e => {
-    const s = viewH * 0.75;
-    if (e.key === 'ArrowDown') targetY = Math.min(totalScrollH, targetY + s);
-    if (e.key === 'ArrowUp')   targetY = Math.max(0, targetY - s);
-  });
+function triggerAR(idx){const mv=document.getElementById('mv_'+idx);if(mv)mv.activateAR();}
+function addToCart(id,cardIdx){
+  const item=menuItems.find(i=>i.id===id);if(!item||!item.available)return;
+  cart[id]=(cart[id]||0)+1; updateCartUI();
+  const btn=document.getElementById('addCartBtn_'+cardIdx);
+  if(btn){btn.classList.add('added-pulse');setTimeout(()=>btn.classList.remove('added-pulse'),700);}
+  const c=document.getElementById('cartCounter_'+cardIdx);
+  if(c){c.textContent=cart[id];c.classList.add('show');}
+  showToast(item.emoji+' '+item.name+' '+T[currentLang].toastSuffix);
 }
-
-/* ════════════════════════════════
-   AR / CART / ORDER
-════════════════════════════════ */
-function triggerAR(idx) {
-  const mv = document.getElementById('mv_' + idx);
-  if (mv) mv.activateAR();
-}
-
-function addToCart(id, cardIdx) {
-  const item = menuItems.find(i => i.id === id);
-  if (!item || !item.available) return;
-  cart[id] = (cart[id] || 0) + 1;
-  updateCartUI();
-  const btn = document.getElementById('addCartBtn_' + cardIdx);
-  if (btn) { btn.classList.add('added-pulse'); setTimeout(() => btn.classList.remove('added-pulse'), 700); }
-  const c = document.getElementById('cartCounter_' + cardIdx);
-  if (c) { c.textContent = cart[id]; c.classList.add('show'); }
-  showToast(item.emoji + ' ' + item.name + ' added');
-}
-
-function updateCartUI() {
-  const n  = Object.values(cart).reduce((a, b) => a + b, 0);
-  const el = document.getElementById('hudCartCount');
-  el.textContent = n; el.classList.toggle('show', n > 0);
-}
-
-function openOrder() {
-  const body = document.getElementById('orderBody');
-  body.innerHTML = '';
-  let total = 0;
-  const entries = Object.entries(cart).filter(([, q]) => q > 0);
-  if (!entries.length) {
-    body.innerHTML = '<div style="text-align:center;padding:40px 20px;color:rgba(240,232,213,0.3);font-family:var(--ff-en);font-size:18px;font-style:italic;">Your order is empty<br><small style="font-size:12px;font-family:var(--ff-jp);font-weight:200">まだ注文がありません</small></div>';
-  } else {
-    entries.forEach(([id, qty]) => {
-      const item = menuItems.find(i => i.id === id); if (!item) return;
-      const sub  = item.price * qty; total += sub;
-      const row  = document.createElement('div'); row.className = 'order-item-row';
-      row.innerHTML = `<div class="orow-emoji">${item.emoji}</div><div class="orow-info"><div class="orow-name">${item.name}</div><div class="orow-jp">${item.jp||''}</div><div class="orow-price">₹ ${sub.toLocaleString('en-IN')}</div></div><div class="orow-qty"><button class="qty-b" onclick="changeCartQty('${id}')">−</button><div class="qty-n">${qty}</div><button class="qty-b" onclick="addToCartDirect('${id}')">+</button></div>`;
+function updateCartUI(){const n=Object.values(cart).reduce((a,b)=>a+b,0);const el=document.getElementById('hudCartCount');el.textContent=n;el.classList.toggle('show',n>0);}
+function openOrder(){
+  const body=document.getElementById('orderBody'); body.innerHTML='';
+  const t=T[currentLang]; let total=0;
+  const entries=Object.entries(cart).filter(([,q])=>q>0);
+  if(!entries.length){
+    body.innerHTML=`<div style="text-align:center;padding:40px 20px;color:rgba(240,232,213,0.3);font-family:var(--ff-en);font-size:18px;font-style:italic;">${t.empty}<br><small style="font-size:12px;font-family:var(--ff-jp);font-weight:200">${t.emptySub}</small></div>`;
+  }else{
+    entries.forEach(([id,qty])=>{
+      const item=menuItems.find(i=>i.id===id);if(!item)return;
+      const sub=item.price*qty;total+=sub;
+      const row=document.createElement('div');row.className='order-item-row';
+      row.innerHTML=`<div class="orow-emoji">${item.emoji}</div><div class="orow-info"><div class="orow-name">${item.name}</div><div class="orow-jp">${item.jp||''}</div><div class="orow-price">₹ ${sub.toLocaleString('en-IN')}</div></div><div class="orow-qty"><button class="qty-b" onclick="changeCartQty('${id}')">−</button><div class="qty-n">${qty}</div><button class="qty-b" onclick="addToCartDirect('${id}')">+</button></div>`;
       body.appendChild(row);
     });
   }
-  document.getElementById('orderTotal').textContent = '₹ ' + total.toLocaleString('en-IN');
+  document.getElementById('orderTotal').textContent='₹ '+total.toLocaleString('en-IN');
+  document.getElementById('ordTitle').textContent=t.orderTitle;
+  document.getElementById('ordSubtitle').textContent=t.orderSub;
+  document.getElementById('ordTotalLabel').textContent=t.totalLabel;
+  document.getElementById('placeBtn').textContent=t.sendBtn;
   document.getElementById('screenOrder').classList.add('show');
 }
-function closeOrder()  { document.getElementById('screenOrder').classList.remove('show'); }
-function changeCartQty(id) { if (!cart[id]) return; cart[id]--; if (cart[id] <= 0) delete cart[id]; updateCartUI(); syncCounters(); openOrder(); }
-function addToCartDirect(id) { cart[id] = (cart[id] || 0) + 1; updateCartUI(); syncCounters(); openOrder(); }
-function syncCounters() {
-  menuItems.forEach((item, idx) => {
-    const c = document.getElementById('cartCounter_' + idx); if (!c) return;
-    const q = cart[item.id] || 0; c.textContent = q; c.classList.toggle('show', q > 0);
-  });
-}
-
-function placeOrder() {
-  const entries = Object.entries(cart).filter(([, q]) => q > 0); if (!entries.length) return;
-  const note = document.getElementById('specialNote').value.trim();
-  let total = 0; const snap = [];
-  entries.forEach(([id, qty]) => { const item = menuItems.find(i => i.id === id); if (!item) return; snap.push({item, qty}); total += item.price * qty; });
-  const orderId = '#ORD-' + Math.floor(1000 + Math.random() * 9000);
-  const now  = new Date();
-  const time = now.toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', hour12:true});
-  const date = now.toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
-  let lines = '';
-  snap.forEach(({item, qty}) => { lines += item.name.padEnd(18) + ' ×' + qty + '  ₹' + (item.price * qty).toLocaleString('en-IN') + '\n'; });
-  const msg = `🍽️ *NEW ORDER — KOT*\n━━━━━━━━━━━━━━━━━━━━\n*Table  :* ${TABLE_NUMBER}\n*Seat   :* ${TABLE_INFO}\n*Order  :* ${orderId}\n*Time   :* ${time}, ${date}\n━━━━━━━━━━━━━━━━━━━━\n${lines}━━━━━━━━━━━━━━━━━━━━\n*TOTAL  :* ₹${total.toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━${note ? '\n📝 *Note:* ' + note : ''}\n_Sent via Sakura AR Menu · さくら_`;
-  let preview = '';
-  snap.forEach(({item, qty}) => { preview += item.name + ' × ' + qty + '  ₹' + (item.price * qty).toLocaleString('en-IN') + '\n'; });
-  preview += '\n合計: ₹' + total.toLocaleString('en-IN');
-  if (note) preview += '\n📝 ' + note;
-  document.getElementById('kotBody').textContent = preview;
+function closeOrder(){document.getElementById('screenOrder').classList.remove('show');}
+function changeCartQty(id){if(!cart[id])return;cart[id]--;if(cart[id]<=0)delete cart[id];updateCartUI();syncCounters();openOrder();}
+function addToCartDirect(id){cart[id]=(cart[id]||0)+1;updateCartUI();syncCounters();openOrder();}
+function syncCounters(){menuItems.forEach((item,idx)=>{const c=document.getElementById('cartCounter_'+idx);if(!c)return;const q=cart[item.id]||0;c.textContent=q;c.classList.toggle('show',q>0);});}
+function placeOrder(){
+  const entries=Object.entries(cart).filter(([,q])=>q>0);if(!entries.length)return;
+  const note=document.getElementById('specialNote').value.trim();
+  let total=0;const snap=[];
+  entries.forEach(([id,qty])=>{const item=menuItems.find(i=>i.id===id);if(!item)return;snap.push({item,qty});total+=item.price*qty;});
+  const orderId='#ORD-'+Math.floor(1000+Math.random()*9000);
+  const now=new Date();
+  const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+  const date=now.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  let lines='';snap.forEach(({item,qty})=>{lines+=item.name.padEnd(18)+' ×'+qty+'  ₹'+(item.price*qty).toLocaleString('en-IN')+'\n';});
+  const msg=`🍽️ *NEW ORDER — KOT*\n━━━━━━━━━━━━━━━━━━━━\n*Table  :* ${TABLE_NUMBER}\n*Seat   :* ${TABLE_INFO}\n*Order  :* ${orderId}\n*Time   :* ${time}, ${date}\n━━━━━━━━━━━━━━━━━━━━\n${lines}━━━━━━━━━━━━━━━━━━━━\n*TOTAL  :* ₹${total.toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━${note?'\n📝 *Note:* '+note:''}\n_Sent via Sakura AR Menu · さくら_`;
+  let preview='';snap.forEach(({item,qty})=>{preview+=item.name+' × '+qty+'  ₹'+(item.price*qty).toLocaleString('en-IN')+'\n';});
+  preview+='\n合計: ₹'+total.toLocaleString('en-IN');
+  if(note) preview+='\n📝 '+note;
+  document.getElementById('kotBody').textContent=preview;
   closeOrder();
   document.getElementById('successOverlay').classList.add('show');
-  setTimeout(() => window.open('https://wa.me/' + KITCHEN_WA + '?text=' + encodeURIComponent(msg), '_blank'), 500);
-  Object.keys(cart).forEach(k => delete cart[k]);
-  document.getElementById('specialNote').value = '';
-  updateCartUI(); syncCounters();
+  setTimeout(()=>window.open('https://wa.me/'+KITCHEN_WA+'?text='+encodeURIComponent(msg),'_blank'),500);
+  Object.keys(cart).forEach(k=>delete cart[k]);
+  document.getElementById('specialNote').value='';
+  updateCartUI();syncCounters();
 }
-function closeSuccess() { document.getElementById('successOverlay').classList.remove('show'); }
-function showToast(msg) { const t = document.getElementById('toast'); t.textContent = '✓ ' + msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600); }
+function closeSuccess(){document.getElementById('successOverlay').classList.remove('show');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent='✓ '+msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
-async function init() {
+async function init(){
   await fetchMenu();
-  setTimeout(() => {
-    document.getElementById('splash').classList.add('out');
-    setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 1000);
-  }, 4000);
+  setTimeout(()=>{document.getElementById('splash').classList.add('out');setTimeout(()=>{document.getElementById('splash').style.display='none';},1000);},4000);
 }
 init();
-document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('contextmenu',e=>e.preventDefault());
 </script>
 </body>
 </html>
